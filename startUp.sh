@@ -1,0 +1,1 @@
+java $PROXY -jar jira-plugin-miro-integration.jar
