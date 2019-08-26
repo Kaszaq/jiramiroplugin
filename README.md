@@ -1,3 +1,5 @@
+# THIS documentation is not yet valid
+
 # Running
 Simplest way to run this application is by using docker.
 
