@@ -1,30 +1,23 @@
 package pl.kaszaq.miro.plugins.jiraintegration;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import pl.kaszaq.howfastyouaregoing.storage.DefaultFileStorage;
-import pl.kaszaq.howfastyouaregoing.storage.FileStorage;
+import org.springframework.core.Ordered;
+import org.springframework.web.filter.ForwardedHeaderFilter;
 
 @Configuration
 public class ProjectConfiguration {
 
-    @Value("${encryption.password:#{null}}")
-    private String encryptionPassword;
-
-    @Value("${jira.url}")
-    private String jiraUrl;
-
     @Bean
-    public JiraAuthenticationProvider provideJira() {
-        return new JiraAuthenticationProvider(jiraUrl);
-    }
+    FilterRegistrationBean<ForwardedHeaderFilter> forwardedHeaderFilter() {
 
-    @Bean
-    public FileStorage provideFileStorage() {
-        if (encryptionPassword == null) {
-            return new DefaultFileStorage();
-        }
-        return new EncryptedFileStorage(encryptionPassword);
+        final FilterRegistrationBean<ForwardedHeaderFilter> filterRegistrationBean = new FilterRegistrationBean<ForwardedHeaderFilter>();
+
+        filterRegistrationBean.setFilter(new ForwardedHeaderFilter());
+        filterRegistrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+
+        return filterRegistrationBean;
     }
 }
