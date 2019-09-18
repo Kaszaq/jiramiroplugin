@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home page</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <script type="text/javascript" src="https://miro.com/app/static/sdk.1.1.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+</head>
+<body>
+<p><button class="btn btn-primary" onclick="authenticateInPopup()">Atlassian</button>
+</p>
+
+<script type="text/javascript"  th:inline="javascript">
+function authenticateInPopup(){
+    let url = "[(${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/oauth2/authorization/atlassian})]";
+    var win = window.open(url)
+    var timer = setInterval(function() {
+    if (win.closed) {
+        miro.board.ui.closeModal();
+    }
+}, 1000);
+}
+</script>
+
+</body>
+</html>

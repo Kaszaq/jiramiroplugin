@@ -49,9 +49,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 //        }
 
         http.authorizeRequests()
+                .antMatchers("/oauth2/login").permitAll()
+                .antMatchers("/").permitAll()
+                .antMatchers("/webjars/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()
+                .defaultSuccessUrl("/oauth2/loginSuccess", true)
+                .loginPage("/oauth2/login")
                 .userInfoEndpoint().userService(userRequest -> {
             JWT token = null;
             String subject=null;

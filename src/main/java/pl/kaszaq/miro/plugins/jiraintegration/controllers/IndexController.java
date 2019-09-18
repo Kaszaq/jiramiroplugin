@@ -31,6 +31,9 @@ public class IndexController {
 
     @ModelAttribute("accessTokenValue")
     public String accessTokenValue(OAuth2AuthenticationToken authentication) {
+        if (authentication==null){
+            return null;
+        }
         OAuth2AuthorizedClient authorizedClient =
                 this.authorizedClientService.loadAuthorizedClient(
                         authentication.getAuthorizedClientRegistrationId(),
