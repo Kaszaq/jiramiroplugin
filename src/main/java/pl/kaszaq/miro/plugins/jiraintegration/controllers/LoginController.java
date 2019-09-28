@@ -1,6 +1,7 @@
 package pl.kaszaq.miro.plugins.jiraintegration.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ResolvableType;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
@@ -14,16 +15,14 @@ import java.util.Map;
 @Controller
 public class LoginController {
 
-    private static String authorizationRequestBaseUri
-            = "oauth2/authorization";
-    Map<String, String> oauth2AuthenticationUrls
-            = new HashMap<>();
 
     @Autowired
     private ClientRegistrationRepository clientRegistrationRepository;
-
+    @Value("${miroClientId}")
+    private String miroClientId;
     @GetMapping("/oauth2/login")
-    public String getLoginPage() {
+    public String getLoginPage(Model model) {
+        model.addAttribute("miroClientId", miroClientId);
         return "oauth_login";
     }
 

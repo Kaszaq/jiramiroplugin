@@ -52,6 +52,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/oauth2/login").permitAll()
                 .antMatchers("/").permitAll()
                 .antMatchers("/webjars/**").permitAll()
+                .antMatchers("/js/**").permitAll()
+                .antMatchers("/getAccessToken").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .oauth2Login()

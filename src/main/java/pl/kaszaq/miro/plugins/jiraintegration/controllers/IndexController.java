@@ -21,25 +21,14 @@ import java.util.List;
 @Controller
 public class IndexController {
 
+    @Value("${miroClientId}")
+    private String miroClientId;
     @Autowired
     private OAuth2AuthorizedClientService authorizedClientService;
+
     @GetMapping("/")
-    public String indexController() {
-
+    public String indexController(Model model) {
+        model.addAttribute("miroClientId", miroClientId);
         return "index"; //view
-    }
-
-    @ModelAttribute("accessTokenValue")
-    public String accessTokenValue(OAuth2AuthenticationToken authentication) {
-        if (authentication==null){
-            return null;
-        }
-        OAuth2AuthorizedClient authorizedClient =
-                this.authorizedClientService.loadAuthorizedClient(
-                        authentication.getAuthorizedClientRegistrationId(),
-                        authentication.getName());
-
-        OAuth2AccessToken accessToken = authorizedClient.getAccessToken();
-        return accessToken.getTokenValue();
     }
 }

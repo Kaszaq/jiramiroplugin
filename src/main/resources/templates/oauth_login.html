@@ -7,23 +7,105 @@
     <script type="text/javascript" src="https://miro.com/app/static/sdk.1.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+<!--    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>-->
+    <style type="text/css">
+        html {
+            height: 100%;
+        }
+
+        body {
+            height: 100%;
+            margin: 0;
+            color: #09043C;
+            font: 14px OpenSans, Arial, Helvetica, sans-serif;
+        }
+
+        * {
+            user-select: none;
+        }
+
+
+        .icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .btn {
+            height: 48px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            color: #4262ff;
+        }
+
+
+        .hotspot-button span {
+            margin-left: 4px;
+        }
+
+
+        .authorize-button svg {
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+
+
+    </style>
+
 </head>
 <body>
-<p><button class="btn btn-primary" onclick="authenticateInPopup()">Atlassian</button>
-</p>
+<div class="btn authorize-button" onclick="authenticateInPopup()">
+
+    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.31 7.526c-.099-.807.528-1.526 1.348-1.526.771 0 1.377.676 1.28 1.451l-.757 6.053c-.035.283-.276.496-.561.496s-.526-.213-.562-.496l-.748-5.978zm1.31 10.724c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
+    <span>Please authorize Jira plugin.</span>
+    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.31 7.526c-.099-.807.528-1.526 1.348-1.526.771 0 1.377.676 1.28 1.451l-.757 6.053c-.035.283-.276.496-.561.496s-.526-.213-.562-.496l-.748-5.978zm1.31 10.724c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
+
+</div>
 
 <script type="text/javascript"  th:inline="javascript">
+
+    const miroClientId = /*[[${miroClientId}]]*/"3074457346801799399";
+    let win;
 function authenticateInPopup(){
-    let url = "[(${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/oauth2/authorization/atlassian})]";
-    var win = window.open(url)
-    var timer = setInterval(function() {
-    if (win.closed) {
-        miro.board.ui.closeModal();
-    }
-}, 1000);
+    const url = "[(${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/oauth2/authorization/atlassian})]";
+    win = window.open(url);
+    const timer = setInterval(function () {
+        if (win.closed) {
+            clearInterval(timer);
+            $.get("/getAccessToken", function (data) { //todo: probably this can be nicely moved away from here
+
+                accessToken = data;
+                getSharedConfiguration(miroClientId)
+                    .then((config)=>{
+                        $.get({
+                            url: "https://api.atlassian.com/oauth/token/accessible-resources",
+                            headers: {"Authorization": "Bearer " + data},
+                        }).then((accessibleResources)=>{
+                            accessTokenIsValid = false;
+                            for (let i = 0; i < accessibleResources.length; i++) {
+                                if (config.jiraCloudId == accessibleResources[i].id) {
+                                    accessTokenIsValid = true;
+
+                                    miro.board.ui.closeBottomPanel();
+                                    break;
+                                }
+                            }
+
+                        })
+
+                    })
+
+
+            })
+
+        }
+    }, 1000);
 }
 </script>
-
+<script type="text/javascript" src="../static/js/configuration.js" th:src="@{/js/configuration.js}"></script>
 </body>
 </html>
