@@ -27,43 +27,16 @@ import java.util.Map;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 
-    @Value("${security.enabled}")
-    private Boolean enabled;
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        if (enabled) {
-//            http
-//                    .authorizeRequests()
-//                    //                .antMatchers("/", "/home").permitAll()
-//                    .anyRequest().authenticated()
-//                    .and()
-//                    .formLogin()
-//                    .loginPage("/login.html")
-//                    .loginProcessingUrl("/login")
-//                    .defaultSuccessUrl("/", true)
-//                    .permitAll()
-//                    .and()
-//                    .logout()
-//                    .permitAll();
-//        }
-
-        http.authorizeRequests()
-                .antMatchers("/oauth2/login").permitAll()
-                .antMatchers("/").permitAll()
-                .antMatchers("/webjars/**").permitAll()
-                .antMatchers("/js/**").permitAll()
-                .antMatchers("/getAccessToken").permitAll()
-                .anyRequest().authenticated()
-                .and()
+        http
                 .oauth2Login()
                 .defaultSuccessUrl("/oauth2/loginSuccess", true)
                 .loginPage("/oauth2/login")
                 .userInfoEndpoint().userService(userRequest -> {
-            JWT token = null;
-            String subject=null;
+            String subject = null;
             try {
-                token = JWTParser.parse(userRequest.getAccessToken().getTokenValue());
+                JWT token = JWTParser.parse(userRequest.getAccessToken().getTokenValue());
                 subject = token.getJWTClaimsSet().getSubject();
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -88,17 +61,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             };
         });
         http.csrf().disable();
-        //http.headers().frameOptions().disable();
-        http.headers().addHeaderWriter(new XFrameOptionsHeaderWriter(new StaticAllowFromStrategy(new URI("https://miro.com/"))));
-    }
-
-    @Bean
-    public CommonsRequestLoggingFilter requestLoggingFilter() {
-        CommonsRequestLoggingFilter loggingFilter = new CommonsRequestLoggingFilter();
-        loggingFilter.setIncludeClientInfo(false);
-        loggingFilter.setIncludeQueryString(true);
-        loggingFilter.setIncludePayload(false);
-        loggingFilter.setIncludeHeaders(false);
-        return loggingFilter;
+        http.headers().contentSecurityPolicy("frame-ancestors miro.com;");
+        http.headers().frameOptions().disable();
     }
 }
