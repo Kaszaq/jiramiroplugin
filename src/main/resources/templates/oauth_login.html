@@ -6,8 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script type="text/javascript" src="https://miro.com/app/static/sdk.1.1.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-<!--    <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>-->
     <style type="text/css">
         html {
             height: 100%;
@@ -54,61 +52,64 @@
             margin-right: 8px;
         }
 
+        @keyframes blinking {
+            0% {
+                background-color: #ffffff;
+            }
+
+            50% {
+                background-color: #d6a583;
+            }
+
+            100% {
+                background-color: #ffffff;
+            }
+        }
+
+        .blink {
+
+            /* NAME | TIME | ITERATION */
+            animation: blinking 1s infinite;
+        }
 
     </style>
 
 </head>
 <body>
-<div class="btn authorize-button" onclick="authenticateInPopup()">
+<div class="blink btn authorize-button" onclick="authenticateInPopup()">
 
-    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.31 7.526c-.099-.807.528-1.526 1.348-1.526.771 0 1.377.676 1.28 1.451l-.757 6.053c-.035.283-.276.496-.561.496s-.526-.213-.562-.496l-.748-5.978zm1.31 10.724c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
+    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path fill="currentColor"
+              d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.31 7.526c-.099-.807.528-1.526 1.348-1.526.771 0 1.377.676 1.28 1.451l-.757 6.053c-.035.283-.276.496-.561.496s-.526-.213-.562-.496l-.748-5.978zm1.31 10.724c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/>
+    </svg>
     <span>Please authorize Jira plugin.</span>
-    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.31 7.526c-.099-.807.528-1.526 1.348-1.526.771 0 1.377.676 1.28 1.451l-.757 6.053c-.035.283-.276.496-.561.496s-.526-.213-.562-.496l-.748-5.978zm1.31 10.724c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/></svg>
+    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+        <path fill="currentColor"
+              d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.31 7.526c-.099-.807.528-1.526 1.348-1.526.771 0 1.377.676 1.28 1.451l-.757 6.053c-.035.283-.276.496-.561.496s-.526-.213-.562-.496l-.748-5.978zm1.31 10.724c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/>
+    </svg>
 
 </div>
 
-<script type="text/javascript"  th:inline="javascript">
+<script type="text/javascript" th:inline="javascript">
 
-    const miroClientId = /*[[${miroClientId}]]*/"3074457346801799399";
 
-    function popupwindow(url, title, w, h) {
-        let left = (screen.width/2)-(w/2);
-        let top = (screen.height/2)-(h/2);
-        return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width='+w+', height='+h+', top='+top+', left='+left);
+    function popupWindow(url, title, w, h) {
+        let left = (screen.width / 2) - (w / 2);
+        let top = (screen.height / 2) - (h / 2);
+        return window.open(url, title, 'toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=' + w + ', height=' + h + ', top=' + top + ', left=' + left);
     }
 
 
-function authenticateInPopup(){
-    const url = "[(${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/oauth2/authorization/atlassian})]";
-    let win = popupwindow(url,'Miro - Jira integration',600, 800)
-    const timer = setInterval(function () {
-        if (win.closed) {
-            clearInterval(timer);
-            $.get("/getAccessToken", function (data) { //todo: probably this can be nicely moved away from here
-
-                getSharedConfiguration(miroClientId)
-                    .then((config)=>{
-                        $.get({
-                            url: "https://api.atlassian.com/oauth/token/accessible-resources",
-                            headers: {"Authorization": "Bearer " + data},
-                        }).then((accessibleResources)=>{
-                            for (let i = 0; i < accessibleResources.length; i++) {
-                                if (config.jiraCloudId == accessibleResources[i].id) {
-                                    miro.board.ui.closeBottomPanel(data);
-                                    break;
-                                }
-                            }
-                        })
-
-                    })
-
-
-            })
-
-        }
-    }, 1000);
-}
+    function authenticateInPopup() {
+        const url = "[(${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/oauth2/authorization/atlassian})]";
+        let win = popupWindow(url, 'Miro - Jira integration', 600, 800)
+        const timer = setInterval(function () {
+            if (win.closed) {
+                clearInterval(timer);
+                miro.board.ui.closeBottomPanel();
+            }
+        }, 1000);
+    }
 </script>
-<script type="text/javascript" src="../static/js/configuration.js" th:src="@{/js/configuration.js}"></script>
 </body>
 </html>
