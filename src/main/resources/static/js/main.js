@@ -13,54 +13,45 @@ miro.onReady(() => {
         }
     });
     //https://api.atlassian.com/ex/jira/{cloudid}/
-    getSharedConfiguration(miroClientId).then((config)=> jiraUrl = 'https://api.atlassian.com/ex/jira/'+config.jiraCloudId);
+    getSharedConfiguration(miroClientId).then((config) => jiraUrl = 'https://api.atlassian.com/ex/jira/' + config.jiraCloudId);
     setTimeout(updateStatus, 0);
 });
 
-let bottomPanelOpen = false;
+
 function requestAuthentication() {
-    if(!bottomPanelOpen){
-        bottomPanelOpen= true;
-        miro.board.ui.openBottomPanel(loginUrl, {width:280}).then(function (data) {
-            bottomPanelOpen=false;
-            setTimeout(updateStatus, 0);
-        }).catch(reason => {
-            setTimeout(updateStatus, 0);
-        });
-    }
+    miro.board.ui.openBottomPanel(loginUrl, {width: 280})
+        .finally(()=> {
+        setTimeout(updateStatus, 0);
+    });
 }
 
-function updateStatus() { // TODO: all this stuff regarding checking the session and access token has to be rewritten...
+function updateStatus() { // TODO: maybe add more params to if statements so it was even less clear what is happening here.
     $.get("/getAccessToken", function (data) {
-        if (data == "" || !accessTokenIsValid) {
-            if(data != "" && !accessTokenIsValid && !bottomPanelOpen) {
-                getSharedConfiguration(miroClientId)
-                    .then((config)=>{
-                        $.get({
-                            url: "https://api.atlassian.com/oauth/token/accessible-resources",
-                            headers: {"Authorization": "Bearer " + data},
-                        }).then((accessibleResources)=>{
-                            for (let i = 0; i < accessibleResources.length; i++) {
-                                if (config.jiraCloudId == accessibleResources[i].id) {
-                                    accessTokenIsValid = true;
-                                    accessToken=data;
-                                    break;
-                                }
+        if (data != "" && !accessTokenIsValid){
+            getSharedConfiguration(miroClientId)
+                .then((config) => {
+                    $.get({
+                        url: "https://api.atlassian.com/oauth/token/accessible-resources",
+                        headers: {"Authorization": "Bearer " + data},
+                    }).then((accessibleResources) => {
+                        for (let i = 0; i < accessibleResources.length; i++) {
+                            if (config.jiraCloudId == accessibleResources[i].id) {
+                                accessTokenIsValid = true;
+                                accessToken = data;
+                                setTimeout(updateStatus, 10000);
+                                return;
                             }
-                            if (data == "" || !accessTokenIsValid) {
-                                requestAuthentication();
-                            }
-                        }).catch(reason => {
-                            requestAuthentication();
-                        })
-
+                        }
+                        requestAuthentication();
+                    }).catch(reason => {
+                        requestAuthentication();
                     })
-            } else {
-                    requestAuthentication();
-            }
-
+                })
+        } else if (data == ""){
+            requestAuthentication();
         } else {
             setTimeout(updateStatus, 10000);
         }
+
     });
 }
