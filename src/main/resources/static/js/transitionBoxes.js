@@ -19,3 +19,27 @@ async function getTransitionBoxes() {
     })
     return transitionBoxes;
 }
+
+
+async function setAsTransitionBox(transitionName, transitionId){
+	miro.board.selection.get().then((widgets)=>{
+		// todo: add check if is only one
+		widgets.forEach(widget =>{
+			let updateObj = {};
+			updateObj.id = widget.id;
+			updateObj.metadata = {};
+			updateObj.metadata[miroClientId] = {};
+			updateObj.metadata[miroClientId].transition = {}
+			updateObj.metadata[miroClientId].transition.name = transitionName;
+			updateObj.metadata[miroClientId].transition.id = transitionId;
+
+			miro.board.widgets.update(updateObj)
+		})
+
+		}
+	)
+
+}
+async function getTransitionBoxes() {
+	return  miro.board.widgets.get('metadata.' + miroClientId + '.transition')
+}
