@@ -8,10 +8,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
-
-</head>
-<body>
-<p>
     <script type="text/javascript" th:inline="javascript">
 
         const miroClientId = /*[[${miroClientId}]]*/"3074457346801799399";
@@ -23,7 +19,9 @@
     <script type="text/javascript" src="../static/js/configuration.js" th:src="@{/js/configuration.js}"></script>
     <script type="text/javascript" src="../static/js/jiraCardsMonitoring.js"
             th:src="@{/js/jiraCardsMonitoring.js}"></script>
+    <script type="text/javascript" src="../static/js/authentication.js" th:src="@{/js/authentication.js}"></script>
     <script type="text/javascript" src="../static/js/main.js" th:src="@{/js/main.js}"></script>
-</p>
+</head>
+<body>
 </body>
 </html>
