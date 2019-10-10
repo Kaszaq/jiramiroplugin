@@ -17,7 +17,7 @@ async function jiraTransformationUpdate(e) {
 					((card.bounds.left >= transitionBox.bounds.left) && (card.bounds.left<= transitionBox.bounds.right)) &&
 					((card.bounds.top >= transitionBox.bounds.top) && (card.bounds.top<= transitionBox.bounds.bottom))
 				) {
-					transitionCard(card, transitionBox.metadata[miroClientId].transition.name, transitionBox.metadata[miroClientId].transition.id);
+					transitionCard(card, transitionBox.metadata[miroClientId].transitions);
 				}
 			})
 		}

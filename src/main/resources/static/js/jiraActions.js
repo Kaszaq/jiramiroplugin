@@ -1,42 +1,46 @@
 // this function will no longer be required once miro exposes jira cards ids
-function strip(html) {
-    var tmp = document.createElement("DIV");
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || "";
-}
 
-async function determineCardKey(card) {
+function determineCardKey(card, projectKey) {
     let cardCustomFieldValues = card.card.customFields.map((el) => el.value);
-    let config = await getSharedConfiguration();
-
     for (let i = 0; i < cardCustomFieldValues.length; i++) {
         let val = cardCustomFieldValues[i];
-        for (let j = 0; j < config.projectIds.length; j++) {
-            let projectId = config.projectIds[j];
-            if (val.startsWith(projectId + "-")) {
-                return val;
-            }
-
+        if (val.startsWith(projectKey + "-")) {
+            return val;
         }
-
     }
 }
 
-async function transitionCard(card, transitionName, transitionId) {
-    let key = await determineCardKey(card);
-    // check here if should Transition, whether the status has actually changed.
+function cardIsInStatus(card, statusName) {
+    let cardCustomFieldValues = card.card.customFields.map((el) => el.value);
+    for (let i = 0; i < cardCustomFieldValues.length; i++) {
+        let val = cardCustomFieldValues[i];
+        if (val == statusName) {
+            return true;
+        }
+    }
+    return false;
+}
 
-    miro.showNotification("Transitioning " + key + " to " + transitionName);
+async function transitionCard(card, transitions) {
+    let transition = transitions[0]; //TODO: currently there is a support for only one transition per object but this might change when this supports multiple cloudIds and projects
 
-    let data = JSON.stringify({transition: {id: transitionId}});
-    let posting = $.post({
-        url: jiraUrl + "/rest/api/3/issue/" + key + "/transitions",
-        headers: {"Authorization": "Bearer " + accessToken,
-            "Accept": "application/json"},
-        data : data,
-        contentType : 'application/json'
-
-    })
+    if(!cardIsInStatus(card, transition.statusName)){
+        let key = determineCardKey(card, transition.projectKey);
+// check here if should Transition, whether the status has actually changed.
+        console.log("Transitioning " + key + " to " + transition.name);
+        let jiraUrl = 'https://api.atlassian.com/ex/jira/' + transition.jiraCloudId
+        let data = JSON.stringify({transition: {id: transition.id}});
+        let posting = $.post({
+            url: jiraUrl + "/rest/api/3/issue/" + key + "/transitions",
+            headers: {
+                "Authorization": "Bearer " + accessToken,
+                "Accept": "application/json"
+            },
+            data: data,
+            contentType: 'application/json'
+        })
+//todo: handle when this fails, probably ask for additional authentications
+    }
 
 }
 

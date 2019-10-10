@@ -1,5 +1,6 @@
 let accessToken = "";
 let accessTokenIsValid = false;
+
 miro.onReady(() => {
     setTimeout(updateStatus, 0);
 });
@@ -15,26 +16,22 @@ function requestAuthentication() {
 function updateStatus() { // TODO: maybe add more params to if statements so it was even less clear what is happening here.
     $.get("/getAccessToken", function (data) {
         if (data != "" && !accessTokenIsValid){
-            getSharedConfiguration(miroClientId)
-                .then((config) => {
-                    $.get({
-                        url: "https://api.atlassian.com/oauth/token/accessible-resources",
-                        headers: {"Authorization": "Bearer " + data},
-                    }).then((accessibleResources) => {
-                        for (let i = 0; i < accessibleResources.length; i++) {
-                            if (config.jiraCloudId == accessibleResources[i].id) {
-                                accessTokenIsValid = true;
-                                accessToken = data;
-                                setTimeout(updateStatus, 10000);
-                                return;
-                            }
-                        }
-                        requestAuthentication();
-                    }).catch(reason => {
-                        requestAuthentication();
-                    })
+
+                $.get({
+                    url: "https://api.atlassian.com/oauth/token/accessible-resources",
+                    headers: {"Authorization": "Bearer " + data},
+                }).then((accessibleResources) => {
+                    accessTokenIsValid = true;
+                    accessToken = data;
+                    configureRuntimeState(accessibleResources);
+                    setTimeout(updateStatus, 10000);
+                }).catch(reason => {
+                    requestAuthentication();
                 })
         } else if (data == ""){
+            accessTokenIsValid = false;
+            accessToken = data;
+            cleanupState();
             requestAuthentication();
         } else {
             setTimeout(updateStatus, 10000);

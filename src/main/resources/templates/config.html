@@ -4,7 +4,6 @@
     <title>Home page</title>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <!--    <script type="text/javascript" src="https://miro.com/app/static/sdk.1.1.js"></script>-->
     <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -22,322 +21,129 @@
             <h3>Jira-Miro config</h3> <small class="text-muted">Here you can configure jira-miro integration plugin. For
             help please see documentation.</small></div>
     </div>
-    <div class="row mt-2">
-        <div class="col"><h5>Jira cloud instance</h5></div>
-    </div>
-    <div class="row">
-        <div class="col-4 text-right">
-            Cloud instance
+    <div id="jiraCloudInstance" style="display: none;">
+        <div class="row mt-2">
+            <div class="col"><h5>Jira cloud instance</h5></div>
         </div>
-        <div class="col-8">
+        <div class="row">
+            <div class="col-4 text-right">
+                Cloud instance
+            </div>
+            <div class="col-8">
 
-            <select class="custom-select">
-                <option selected>Open this select menu</option>
-                <option value="1">howfastyouaregoing.atlassian.net</option>
-                <option value="2">someotherapp.atlassian.net</option>
-                <option value="3">example.atlassian.net</option>
-            </select>
+                <select class="custom-select">
+                    <option selected>Open this select menu</option>
+                    <option value="1">howfastyouaregoing.atlassian.net</option>
+                    <option value="2">someotherapp.atlassian.net</option>
+                    <option value="3">example.atlassian.net</option>
+                </select>
 
-        </div>
-    </div>
-    <div class="row mt-2">
-        <div class="col"><h5>Choose project</h5></div>
-    </div>
-    <div class="row">
-        <div class="col-4 text-right">
-            Project
-        </div>
-        <div class="col-8">
-
-            <select class="custom-select">
-                <option selected>Open this select menu</option>
-                <option value="1">AAS - a jak to wyglada na szerokosc</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-                <option value="1">AAS</option>
-                <option value="2">KAWK</option>
-                <option value="3">POS</option>
-                <option value="1">SIKO</option>
-                <option value="2">TEST</option>
-                <option value="3">MAVE</option>
-            </select>
-
+            </div>
         </div>
     </div>
-
-    <div class="row mt-2">
-        <div class="col"><h5>Bind transitions</h5></div>
-    </div>
-    <div class="row">
-        <div class="col-6 text-right">
-            Open
+    <div id="chooseProject" style="display: none;">
+        <div class="row mt-2">
+            <div class="col"><h5>Choose project</h5></div>
         </div>
-        <div class="pl-0 col-6">
-            <button type="button" class="btn-sm btn btn-outline-primary w-50">Set</button>
+        <div class="row">
+            <div class="col-4 text-right">
+                Project
+            </div>
+            <div class="col-8">
 
-            <button type="button" class="btn-sm btn btn-outline-secondary" disabled>Show</button>
+                <select class="custom-select">
+                    <option selected>Open this select menu</option>
+                    <option value="1">AAS - a jak to wyglada na szerokosc</option>
+                    <option value="2">KAWK</option>
+                    <option value="3">POS</option>
+                    <option value="1">AAS</option>
+                    <option value="2">KAWK</option>
+                    <option value="3">POS</option>
+                    <option value="1">SIKO</option>
+                </select>
 
-        </div>
-    </div>
-    <div class="row mt-1">
-        <div class="col-6 text-right">
-            To-do
-        </div>
-        <div class="pl-0 col-6">
-            <button type="button" class="btn-sm btn btn-outline-primary w-50">Set</button>
-
-            <button type="button" class="btn-sm btn btn-outline-secondary">Show</button>
-
+            </div>
         </div>
     </div>
-    <div class="row mt-1">
-        <div class="col-6 text-right">
-            In Development
+    <div id="bindTransitions" style="display: none;">
+        <div class="row mt-2">
+            <div class="col"><h5>Bind transitions</h5></div>
         </div>
-        <div class="pl-0 col-6">
-            <button type="button" class="btn-sm btn btn-outline-primary w-50">Set</button>
+        <div id="transitionRows">
+            <div class="row">
+                <div class="col-6 text-right">
+                    Open
+                </div>
+                <div class="pl-0 col-6">
+                    <button type="button" class="btn-sm btn btn-outline-primary w-50">Set</button>
 
-            <button type="button" class="btn-sm btn btn-outline-secondary">Show</button>
+                    <button type="button" class="btn-sm btn btn-outline-secondary" disabled>Blink</button>
 
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-6 text-right">
+                    To-do
+                </div>
+                <div class="pl-0 col-6">
+                    <button type="button" class="btn-sm btn btn-outline-primary w-50">Set</button>
+
+                    <button type="button" class="btn-sm btn btn-outline-secondary">Blink</button>
+
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-6 text-right">
+                    In Development
+                </div>
+                <div class="pl-0 col-6">
+                    <button type="button" class="btn-sm btn btn-outline-primary w-50">Set</button>
+
+                    <button type="button" class="btn-sm btn btn-outline-secondary">Blink</button>
+
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-6 text-right">
+                    In Review
+                </div>
+                <div class="pl-0 col-6">
+                    <button type="button" class="btn-sm btn btn-outline-primary w-50">Set</button>
+
+                    <button type="button" class="btn-sm btn btn-outline-secondary">Blink</button>
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-6 text-right">
+                    In testing
+                </div>
+                <div class="pl-0 col-6">
+                    <button type="button" class="btn-sm btn btn-outline-primary w-50">Set</button>
+
+                    <button type="button" class="btn-sm btn btn-outline-secondary">Blink</button>
+
+                </div>
+            </div>
+            <div class="row mt-1">
+                <div class="col-6 text-right">
+                    Closed
+                </div>
+                <div class="pl-0 col-6">
+                    <button type="button" class="btn-sm btn btn-outline-primary w-50">Set</button>
+
+                    <button type="button" class="btn-sm btn btn-outline-secondary">Blink</button>
+
+                </div>
+            </div>
         </div>
     </div>
-    <div class="row mt-1">
-        <div class="col-6 text-right">
-            In Review
-        </div>
-        <div class="pl-0 col-6">
-            <button type="button" class="btn-sm btn btn-outline-primary w-50">Set</button>
-
-            <button type="button" class="btn-sm btn btn-outline-secondary">Show</button>
-
-        </div>
-    </div>
-    <div class="row mt-1">
-        <div class="col-6 text-right">
-            In testing
-        </div>
-        <div class="pl-0 col-6">
-            <button type="button" class="btn-sm btn btn-outline-primary w-50">Set</button>
-
-            <button type="button" class="btn-sm btn btn-outline-secondary">Show</button>
-
-        </div>
-    </div>
-    <div class="row mt-1">
-        <div class="col-6 text-right">
-            Closed
-        </div>
-        <div class="pl-0 col-6">
-            <button type="button" class="btn-sm btn btn-outline-primary w-50">Set</button>
-
-            <button type="button" class="btn-sm btn btn-outline-secondary">Show</button>
-
-        </div>
-    </div>
-<!--    <div class="row">-->
-<!--        <div class="col-6">-->
-<!--            To-do-->
-<!--        </div>-->
-<!--        <div class="col-4">-->
-<!--            <button type="button" class=" btn-block btn-sm btn btn-outline-primary">Set</button>-->
-<!--        </div>-->
-<!--        <div class="col-2">-->
-<!--            <button type="button" class=" btn-block btn-sm btn btn-outline-secondary">Show</button>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="row">-->
-<!--        <div class="col-6">-->
-<!--            In Development-->
-<!--        </div>-->
-<!--        <div class="col-4">-->
-<!--            <button type="button" class=" btn-block btn-sm btn btn-outline-primary">Set</button>-->
-<!--        </div>-->
-<!--        <div class="col-2">-->
-<!--            <button type="button" class=" btn-block btn-sm btn btn-outline-secondary">Show</button>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="row">-->
-<!--        <div class="col-6">-->
-<!--            In Review-->
-<!--        </div>-->
-<!--        <div class="col-4">-->
-<!--            <button type="button" class=" btn-block btn-sm btn btn-outline-primary">Set</button>-->
-<!--        </div>-->
-<!--        <div class="col-2">-->
-<!--            <button type="button" class=" btn-block btn-sm btn btn-outline-secondary">Show</button>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    <div class="row">-->
-<!--        <div class="col-6">-->
-<!--            Closed-->
-<!--        </div>-->
-<!--        <div class="col-4">-->
-<!--            <button type="button" class=" btn-block btn-sm btn btn-outline-primary">Set</button>-->
-<!--        </div>-->
-<!--        <div class="col-2">-->
-<!--            <button type="button" class=" btn-block btn-sm btn btn-outline-secondary">Show</button>-->
-<!--        </div>-->
-<!--    </div>-->
-
 </div>
 
 
-<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
-        crossorigin="anonymous"></script>
+<!--<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"-->
+<!--        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"-->
+<!--        crossorigin="anonymous"></script>-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
         integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
@@ -345,16 +151,17 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
         integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
         crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://miro.com/app/static/sdk.1.1.js"></script>
 <script type="text/javascript" th:inline="javascript">
+
     const miroClientId = /*[[${miroClientId}]]*/"3074457346801799399";
 
-    $(".dropdown-menu li a").click(function () {
-        let selText = $(this).text();
-        $(this).parents('.btn-group').find('.dropdown-toggle').html(selText + ' <span class="caret"></span>');
-    });
 </script>
+<script type="text/javascript" src="../static/js/transitionBoxes.js" th:src="@{/js/transitionBoxes.js}"></script>
+
+
+<script type="text/javascript" src="../static/js/configurator.js" th:src="@{/js/configurator.js}"></script>
 <!--<script type="text/javascript" src="../static/js/jiraActions.js" th:src="@{/js/jiraActions.js}"></script>-->
-<!--<script type="text/javascript" src="../static/js/transitionBoxes.js" th:src="@{/js/transitionBoxes.js}"></script>-->
 <!--<script type="text/javascript" src="../static/js/jiraCardsDetails.js" th:src="@{/js/jiraCardsDetails.js}"></script>-->
 <!--<script type="text/javascript" src="../static/js/configuration.js" th:src="@{/js/configuration.js}"></script>-->
 <!--<script type="text/javascript" src="../static/js/jiraCardsMonitoring.js"-->

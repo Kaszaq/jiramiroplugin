@@ -2,17 +2,19 @@
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
-async function getSharedConfiguration() {
-    let config = {};
+async function getJiraCloudId() { //todo: this should become obsolete
+
+
+    let cloudId = {};
     let found = false;
     while (!found) {
-        let confWidget = await miro.board.widgets.get('metadata.' + miroClientId + '.sharedConfig');
-        if (confWidget[0]) {
+        let transitionBoxes = await getTransitionBoxes();
+        if (transitionBoxes[0]) {
             found = true;
-            config = confWidget[0].metadata[miroClientId].sharedConfig
+            cloudId = confWidget[0].metadata[miroClientId].transitions[0].jiraCloudId;
         } else {
             await sleep(1000);
         }
     }
-    return config;
+    return cloudId;
  }
