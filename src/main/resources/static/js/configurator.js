@@ -12,22 +12,26 @@ function boxContainsTransition(box, transitionId) {
 
 function setNewRow(parentElement, jiraCloudId, projectKey, transitionName, transitionId, statusName) {
     let row = "<div class='row mt-1'><div class='col-7 text-right text-truncate'>" + transitionName + "</div>"
-        + "<div class='pl-0 col-5'>"
+        + "<div class='pl-0 col-5 pr-0'>"
         + "<button id='transitionButtonSet_" + transitionId + "' type='button' class='btn-sm btn btn-outline-primary w-50'>Set</button>"
         + "<button id='transitionButtonBlink_" + transitionId + "' type='button' class='btn-sm btn btn-outline-secondary'>Blink</button>"
+        + "<button id='transitionButtonClear_" + transitionId + "' type=\"button\" class=\"close\" aria-label=\"Close\">"
+        + "  <span aria-hidden=\"true\">×</span>"
+        + "</button>"
         + " </div>"
         + "</div>";
     parentElement.append(row);
     $("#transitionButtonSet_" + transitionId).click(function () {
         miro.broadcastData({
             type: 'select_transition_box',
-            data:{
-            jiraCloudId: jiraCloudId,
-            projectKey: projectKey,
-            transitionName: transitionName,
-            transitionId: transitionId,
-            statusName: statusName
-        }})
+            data: {
+                jiraCloudId: jiraCloudId,
+                projectKey: projectKey,
+                transitionName: transitionName,
+                transitionId: transitionId,
+                statusName: statusName
+            }
+        })
     });
     $("#transitionButtonBlink_" + transitionId).click(function () {
         getTransitionBoxes().then(transitionBoxes => {
@@ -39,6 +43,23 @@ function setNewRow(parentElement, jiraCloudId, projectKey, transitionName, trans
             });
             miro.board.widgets.__blinkWidget(transitionBoxesForThisTransition);
         })
+    });
+    $("#transitionButtonClear_" + transitionId).click(function () {
+        let needToClear = confirm('Do you want clear '+ transitionName +' transitions?');
+
+        if (needToClear) {
+            getTransitionBoxes().then(transitionBoxes => {
+                transitionBoxes.forEach(box => {
+                    if (boxContainsTransition(box, transitionId)) {
+                        removeTransitionFromWidget(box,transitionId, jiraCloudId)
+                    }
+                });
+
+            })
+        }
+
+
+
     });
 
 }
@@ -58,14 +79,15 @@ function loadTransitionsForProject(cloudEnv, projectId) {
         headers: {"Authorization": "Bearer " + accessToken},
         data: {
             maxResults: 1,
-        jql: 'project=' + projectKey,
-        fields: 'key'}
+            jql: 'project=' + projectKey,
+            fields: 'key'
+        }
     }).then((result) => {
         let sampleIssueKey = result.issues[0].key;
 
 
         $.get({
-            url: jiraUrl + '/rest/api/3/issue/'+sampleIssueKey+'/transitions',
+            url: jiraUrl + '/rest/api/3/issue/' + sampleIssueKey + '/transitions',
             headers: {"Authorization": "Bearer " + accessToken}
         }).then((issueDetails) => {
 

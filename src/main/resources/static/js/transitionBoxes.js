@@ -1,34 +1,53 @@
+function getPreviousTransitions(widget) {
+    try {
+        return widget.metadata[miroClientId].transitions;
+    } catch (e) { // is this an antipattern in javascript? other ways to check this look ridiculously complex
+        return [];
+    }
+}
 
-function widgetContainsTransitionForProject(widget, projectKey) {
-	let transitions;
-	try {
-		transitions = widget.metadata[miroClientId].transitions;
-		for (let i = 0; i < transitions.length; i++) {
-			if (transitions[i].projectKey === projectKey) {
-				return true;
-			}
-		}
-	} catch(e) { // is this an antipattern in javascript? other ways to check this look ridiculously complex
-		// ignore
-	}
-    return false;
+
+function removeTransitionsForProject(previousTransitions, projectKey, jiraCloudId) {
+    for (let i = previousTransitions.length - 1; i >= 0; i--) {
+        if (previousTransitions[i].projectKey === projectKey && previousTransitions[i].jiraCloudId=== jiraCloudId) {
+            previousTransitions.splice(i, 1);
+        }
+    }
+}
+function removeTransitionsForId(previousTransitions, transitionId, jiraCloudId) {
+    for (let i = previousTransitions.length - 1; i >= 0; i--) {
+        if (previousTransitions[i].id === transitionId  && previousTransitions[i].jiraCloudId=== jiraCloudId) {
+            previousTransitions.splice(i, 1);
+        }
+    }
 }
 
 async function setWidgetAsTransitionBox(widget, jiraCloudId, projectKey, transitionName, transitionId, statusName) {
-    if (!widgetContainsTransitionForProject(widget, projectKey)) {
-        let updateObj = {id: widget.id, metadata: {}};
-        updateObj.metadata[miroClientId] = {
-            transitions: [{
-                id: transitionId,
-                name: transitionName,
-                jiraCloudId: jiraCloudId,
-                projectKey: projectKey,
-                statusName: statusName
-            }]
-        };
-		return miro.board.widgets.__blinkWidget(await miro.board.widgets.update(updateObj));
 
-    }
+    let updateObj = {id: widget.id, metadata: {}};
+    let previousTransitions = getPreviousTransitions(widget);
+    removeTransitionsForProject(previousTransitions, projectKey, jiraCloudId);
+    previousTransitions.push({
+        id: transitionId,
+        name: transitionName,
+        jiraCloudId: jiraCloudId,
+        projectKey: projectKey,
+        statusName: statusName
+    });
+    updateObj.metadata[miroClientId] = {
+        transitions: previousTransitions
+    };
+    return miro.board.widgets.__blinkWidget(await miro.board.widgets.update(updateObj));
+}
+
+async function removeTransitionFromWidget(widget, transitionId, jiraCloudId) {
+    let updateObj = {id: widget.id, metadata: {}};
+    let previousTransitions = getPreviousTransitions(widget);
+    removeTransitionsForId(previousTransitions, transitionId, jiraCloudId);
+    updateObj.metadata[miroClientId] = {
+        transitions: previousTransitions
+    };
+    return miro.board.widgets.__blinkWidget(await miro.board.widgets.update(updateObj));
 }
 
 async function setSelectedWidgetsAsTransitionBox(jiraCloudId, projectKey, transitionName, transitionId, statusName) {
