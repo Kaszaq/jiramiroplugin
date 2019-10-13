@@ -41,8 +41,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             } catch (ParseException e) {
                 e.printStackTrace();
             }
+            String sub = subject;
 
-            return new AtlassianOAuth2User(subject);
+            return new OAuth2User() {
+                @Override
+                public Collection<? extends GrantedAuthority> getAuthorities() {
+                    return null;
+                }
+
+                @Override
+                public Map<String, Object> getAttributes() {
+                    return null;
+                }
+
+                @Override
+                public String getName() {
+                    return sub;
+                }
+            };
         });
         http.csrf().disable();
         http.headers().contentSecurityPolicy("frame-ancestors miro.com;");
