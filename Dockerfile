@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-alpine
+FROM openjdk:11.0.4-jre-slim
 ARG BUILD_DATE
 ARG VERSION=DIRTY
 ARG VCS_URL=??
@@ -14,15 +14,11 @@ LABEL org.label-schema.schema-version="1.0" \
   org.label-schema.version="$VERSION"
 
 # Set URANDOM
-RUN sed \
- -e 's#securerandom.source=file:/dev/random#securerandom.source=file:/dev/urandom#' \
- -i $JAVA_HOME/lib/security/java.security
+# RUN sed \
+#  -e 's#securerandom.source=file:/dev/random#securerandom.source=file:/dev/urandom#' \
+#  -i $JAVA_HOME/lib/security/java.security
 
 ENV PROXY=""
-RUN mkdir /storage
-RUN chown nobody:nogroup /storage
-VOLUME /storage
-ENV STORAGE_DIR="/storage"
 
 COPY target/jira-plugin-miro-integration*.jar jira-plugin-miro-integration.jar
 COPY startUp.sh startUp.sh
