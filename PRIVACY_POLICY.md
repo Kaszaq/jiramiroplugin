@@ -33,3 +33,7 @@ Later on based on information about these transitions this addon can query Jira 
 **Source code**
 
 Source code of this plugin is open and is available at https://github.com/Kaszaq/jiramiroplugin
+
+**DISCLAIMER**
+
+This project is still in testing phase. Precautions are made and I code it with due diligence, however until this plugin is stabilized and well tested you use it at your own risk.
