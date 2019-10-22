@@ -1,26 +1,10 @@
+FROM maven:3.6.2-jdk-11-slim AS build  
+COPY src /usr/src/app/src  
+COPY pom.xml /usr/src/app  
+RUN mvn -f /usr/src/app/pom.xml clean package
+
 FROM openjdk:11.0.4-jre-slim
-ARG BUILD_DATE
-ARG VERSION=DIRTY
-ARG VCS_URL=??
-ARG VCS_REF=??
-LABEL org.label-schema.schema-version="1.0" \
-  org.label-schema.name="jira-plugin-miro-integration"\
-  org.label-schema.description="Application used to visualise metrics of Jira Projects"\
-  org.label-schema.vendor="kaszaq.pl"\
-  org.label-schema.maintainer="kaszaq@gmail.com" \
-  org.label-schema.build-date="$BUILD_DATE" \
-  org.label-schema.vcs-ref="$VCS_REF" \
-  org.label-schema.vcs-url="$VCS_URL" \
-  org.label-schema.version="$VERSION"
-
-# Set URANDOM
-# RUN sed \
-#  -e 's#securerandom.source=file:/dev/random#securerandom.source=file:/dev/urandom#' \
-#  -i $JAVA_HOME/lib/security/java.security
-
-ENV PROXY=""
-
-COPY target/jira-plugin-miro-integration*.jar jira-plugin-miro-integration.jar
+COPY --from=build /usr/src/app/target/jira-plugin-miro-integration*.jar jira-plugin-miro-integration.jar
 COPY startUp.sh startUp.sh
 RUN chmod +x startUp.sh
 USER 65534

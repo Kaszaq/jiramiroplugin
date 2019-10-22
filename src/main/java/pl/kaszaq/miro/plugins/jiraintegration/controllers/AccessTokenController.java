@@ -37,8 +37,12 @@ public class AccessTokenController {
 
 
         OAuth2AuthorizeRequest request = OAuth2AuthorizeRequest.withAuthorizedClient(authorizedClient).principal(authentication).build();
-        authorizedClient = manager.authorize(request);
-
+        try {
+            authorizedClient = manager.authorize(request);
+        } catch (RuntimeException ex){
+            log.error("Got exception when authorizing/trying to refresh access token",  ex);
+            return null;
+        }
 
         OAuth2AccessToken accessToken = authorizedClient.getAccessToken();
         return accessToken.getTokenValue();

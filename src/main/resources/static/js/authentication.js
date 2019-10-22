@@ -34,6 +34,7 @@ function updateStatus() { // TODO: maybe add more params to if statements so it 
             cleanupState();
             requestAuthentication();
         } else {
+			accessToken = data; //TODO; probably it would be good to verify this one as well ;)
             setTimeout(updateStatus, 10000);
         }
 
