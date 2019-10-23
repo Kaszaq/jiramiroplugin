@@ -2,66 +2,125 @@ package pl.kaszaq.miro.plugins.jiraintegration;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
+import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.client.web.OAuth2AuthorizationRequestResolver;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.security.web.header.writers.frameoptions.StaticAllowFromStrategy;
-import org.springframework.security.web.header.writers.frameoptions.WhiteListedAllowFromStrategy;
-import org.springframework.security.web.header.writers.frameoptions.XFrameOptionsHeaderWriter;
-import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
-import java.net.URI;
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Collection;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
+@Slf4j
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    private ClientRegistrationRepository clientRegistrationRepository;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .oauth2Login()
-                .defaultSuccessUrl("/oauth2/loginSuccess", true)
-                .loginPage("/oauth2/login")
-                .userInfoEndpoint().userService(userRequest -> {
-            String subject = null;
-            try {
-                JWT token = JWTParser.parse(userRequest.getAccessToken().getTokenValue());
-                subject = token.getJWTClaimsSet().getSubject();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-            String sub = subject;
+                .oauth2Login(oauth2Login ->
+                        oauth2Login
+                                .authorizationEndpoint(authorizationEndpoint ->
+                                        authorizationEndpoint
+                                                .authorizationRequestResolver(
+                                                        new CustomAuthorizationRequestResolver(
+                                                                this.clientRegistrationRepository))
+                                )
 
-            return new OAuth2User() {
-                @Override
-                public Collection<? extends GrantedAuthority> getAuthorities() {
-                    return null;
-                }
+                                .defaultSuccessUrl("/oauth2/loginSuccess", true)
+                                .loginPage("/oauth2/login")
+                                .userInfoEndpoint().userService(userRequest -> {
+                            String subject = null;
+                            try {
+                                JWT token = JWTParser.parse(userRequest.getAccessToken().getTokenValue());
+                                subject = token.getJWTClaimsSet().getSubject();
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                            String sub = subject;
 
-                @Override
-                public Map<String, Object> getAttributes() {
-                    return null;
-                }
+                            return new OAuth2User() {
+                                @Override
+                                public Collection<? extends GrantedAuthority> getAuthorities() {
+                                    return null;
+                                }
 
-                @Override
-                public String getName() {
-                    return sub;
-                }
-            };
-        });
+                                @Override
+                                public Map<String, Object> getAttributes() {
+                                    return null;
+                                }
+
+                                @Override
+                                public String getName() {
+                                    return sub;
+                                }
+                            };
+                        })
+                );
         http.csrf().disable();
         http.headers().contentSecurityPolicy("frame-ancestors miro.com;");
         http.headers().frameOptions().disable();
+    }
+}
+
+@Slf4j
+class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRequestResolver {
+    private final OAuth2AuthorizationRequestResolver defaultAuthorizationRequestResolver;
+
+    public CustomAuthorizationRequestResolver(
+            ClientRegistrationRepository clientRegistrationRepository) {
+
+        this.defaultAuthorizationRequestResolver =
+                new DefaultOAuth2AuthorizationRequestResolver(
+                        clientRegistrationRepository, "/oauth2/authorization");
+    }
+
+    @Override
+    public OAuth2AuthorizationRequest resolve(HttpServletRequest request) {
+        OAuth2AuthorizationRequest authorizationRequest =
+                this.defaultAuthorizationRequestResolver.resolve(request);
+
+        return authorizationRequest != null ?
+                customAuthorizationRequest(request, authorizationRequest) :
+                null;
+    }
+
+    @Override
+    public OAuth2AuthorizationRequest resolve(
+            HttpServletRequest request, String clientRegistrationId) {
+        OAuth2AuthorizationRequest authorizationRequest =
+                this.defaultAuthorizationRequestResolver.resolve(
+                        request, clientRegistrationId);
+
+        return authorizationRequest != null ?
+                customAuthorizationRequest(request, authorizationRequest) :
+                null;
+    }
+
+    private OAuth2AuthorizationRequest customAuthorizationRequest(
+            HttpServletRequest request, OAuth2AuthorizationRequest authorizationRequest) {
+        boolean consent = request.getParameterMap().containsKey("consent");
+        if(!consent){
+            return authorizationRequest;
+        }
+        Map<String, Object> additionalParameters =
+                new LinkedHashMap<>(authorizationRequest.getAdditionalParameters());
+        additionalParameters.put("prompt", "consent");
+
+        return OAuth2AuthorizationRequest.from(authorizationRequest)
+                .additionalParameters(additionalParameters)
+                .build();
     }
 }
