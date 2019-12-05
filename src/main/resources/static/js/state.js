@@ -1,5 +1,6 @@
 let state = [];
 
+
 function cleanupState() {
     state = [];
     miro.__setRuntimeState({envs:state});

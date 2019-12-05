@@ -1,4 +1,4 @@
-'use strict';
+
 
 let accessToken = "";
 let accessTokenIsValid = false;
@@ -6,11 +6,11 @@ let accessTokenIsValid = false;
 miro.onReady(() => {
     setTimeout(updateStatus, 0);
 });
-let authenticationSuccess;
-let authenticationFailure;
+var authenticationSuccess;
+var authenticationFailure;
 
 function tryHiddenAuthentication() {
-    $("#authenticationFrame")[0].src = "/oauth2/login?none"
+    $("#authenticationFrame")[0].src = "/oauth2/authorization/atlassian?none"
     return new Promise(function (resolve, reject) {
         authenticationSuccess = function () {
             resolve();
@@ -21,7 +21,7 @@ function tryHiddenAuthentication() {
         setTimeout(function () {
             authenticationSuccess = null;
             authenticationFailure = null;
-            resolve();
+            reject();
         }, 5000);
     });
 
@@ -32,7 +32,7 @@ function requestAuthentication() {
 // todo: miro notify that trying to reconnect with Jira, please wait
     tryHiddenAuthentication()
         .catch(() => {
-            miro.board.ui.openBottomPanel(loginUrl, {width: 280})
+            return miro.board.ui.openBottomPanel(loginUrl, {width: 280})
         })
         .finally(() => {
             setTimeout(updateStatus, 0);

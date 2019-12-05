@@ -12,10 +12,10 @@
 <body>
 Authentication failed, <a href="/oauth2/login">retry</a>.
 <script type="text/javascript">
-    if (parent !== window) {
+    if (parent === window) {
         close()
     } else {
-        parent.authFailure();
+        parent.authenticationFailure();
     }
 </script>
 

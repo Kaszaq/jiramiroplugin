@@ -71,7 +71,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         })
                 );
         http.csrf().disable();
-        http.headers().contentSecurityPolicy("frame-ancestors miro.com;");
+        http.headers().contentSecurityPolicy("frame-ancestors miro.com 'self';");
         http.headers().frameOptions().disable();
     }
 }
