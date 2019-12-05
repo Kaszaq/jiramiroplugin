@@ -26,4 +26,9 @@ public class LoginController {
     public String getLoginSuccessPage() {
         return "oauth_login_success";
     }
+
+    @GetMapping("/oauth2/loginFailure")
+    public String getLoginFailurePage() {
+        return "oauth_login_failure";
+    }
 }

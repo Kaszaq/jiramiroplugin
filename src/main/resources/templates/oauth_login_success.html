@@ -11,7 +11,11 @@
 </head>
 <body>
 <script type="text/javascript">
-    close()
+    if(parent===window) {
+        close()
+        } else {
+        parent.authSuccess();
+        }
 </script>
 
 </body>

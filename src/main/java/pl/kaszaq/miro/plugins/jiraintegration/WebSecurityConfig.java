@@ -40,6 +40,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                                 )
 
                                 .defaultSuccessUrl("/oauth2/loginSuccess", true)
+                                .failureUrl("/oauth2/loginFailure")
                                 .loginPage("/oauth2/login")
                                 .userInfoEndpoint().userService(userRequest -> {
                             String subject = null;
@@ -111,13 +112,13 @@ class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRequestRe
 
     private OAuth2AuthorizationRequest customAuthorizationRequest(
             HttpServletRequest request, OAuth2AuthorizationRequest authorizationRequest) {
-        boolean consent = request.getParameterMap().containsKey("consent");
+        boolean consent = request.getParameterMap().containsKey("none");
         if(!consent){
             return authorizationRequest;
         }
         Map<String, Object> additionalParameters =
                 new LinkedHashMap<>(authorizationRequest.getAdditionalParameters());
-        additionalParameters.put("prompt", "consent");
+        additionalParameters.put("prompt", "none");
 
         return OAuth2AuthorizationRequest.from(authorizationRequest)
                 .additionalParameters(additionalParameters)
