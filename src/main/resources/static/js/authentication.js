@@ -40,29 +40,32 @@ function requestAuthentication() {
 }
 
 function updateStatus() { // TODO: maybe add more params to if statements so it was even less clear what is happening here.
-    $.get("/getAccessToken", function (data) {
-        if (data != "" && !accessTokenIsValid) {
+    $.get("/getAccessToken")
+        .done(function (data) {
+            if (data != "" && !accessTokenIsValid) {
 
-            $.get({
-                url: "https://api.atlassian.com/oauth/token/accessible-resources",
-                headers: {"Authorization": "Bearer " + data},
-            }).then((accessibleResources) => {
-                accessTokenIsValid = true;
+                $.get({
+                    url: "https://api.atlassian.com/oauth/token/accessible-resources",
+                    headers: {"Authorization": "Bearer " + data},
+                }).then((accessibleResources) => {
+                    accessTokenIsValid = true;
+                    accessToken = data;
+                    configureRuntimeState(accessibleResources);
+                    setTimeout(updateStatus, 10000);
+                }).catch(reason => {
+                    requestAuthentication();
+                })
+            } else if (data == "") {
+                accessTokenIsValid = false;
                 accessToken = data;
-                configureRuntimeState(accessibleResources);
-                setTimeout(updateStatus, 10000);
-            }).catch(reason => {
+                cleanupState();
                 requestAuthentication();
-            })
-        } else if (data == "") {
-            accessTokenIsValid = false;
-            accessToken = data;
-            cleanupState();
-            requestAuthentication();
-        } else {
-            accessToken = data; //TODO; probably it would be good to verify this one as well ;)
+            } else {
+                accessToken = data; //TODO; probably it would be good to verify this one as well ;)
+                setTimeout(updateStatus, 10000);
+            }
+        })
+        .fail(function() {
             setTimeout(updateStatus, 10000);
-        }
-
-    });
+        })
 }
