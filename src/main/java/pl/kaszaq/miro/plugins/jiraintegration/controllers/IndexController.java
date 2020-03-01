@@ -18,4 +18,15 @@ public class IndexController {
         model.addAttribute("miroClientId", miroClientId);
         return "index"; //view
     }
+    @GetMapping("/install")
+    public String installController() {
+        //model.addAttribute("miroClientId", miroClientId);
+        return "install"; //view
+    }
+
+    @GetMapping("/installComplete")
+    public String installCompleteController() {
+        //model.addAttribute("miroClientId", miroClientId);
+        return "authFinished"; //view
+    }
 }

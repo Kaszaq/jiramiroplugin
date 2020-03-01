@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Home page</title>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>-->
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" type="text/css" href="https://miro.com/app/static/styles.1.0.css">
+    <script type="text/javascript" src="https://miro.com/app/static/sdk.1.1.js"></script>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0px;
+            background-color: transparent;
+        }
+
+
+        html, body {
+            height: 100%;
+        }
+    </style>
+    <script type="text/javascript" th:inline="javascript">
+        const appUrl = /*[('"'+${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+'"')]*/ "";
+    </script>
+    <script type="text/javascript" src="../static/js/miroAuthorizer.js" th:src="@{/js/miroAuthorizer.js}"></script>
+</head>
+<body>
+
+<div class="container-fluid">
+    <section style="margin-bottom: 30px;margin-top: 20px;">
+        <div class="miro-h1" style="margin-bottom: 10px">Install Jira-Miro plugin</div>
+
+        <div class=" miro-p-medium" style="margin-bottom: 10px">
+
+
+            This board uses Jira transitions plugin. Please install it to make sure no data is lost when using this board.
+            Not installing this plugin may cause the board not to work as intended.
+        </div>
+        <div class=" miro-p-medium"style="margin-bottom: 10px">
+
+
+            If you Skip you can install this plugin later on by clicking on plugin button.
+        </div>
+        <div>
+            <img src="../static/img/whereisicon.png" th:src="@{img/whereisicon.png}" style="width: 50%"/>
+        </div>
+    </section>
+    <div style="float: right">
+        <button class="miro-btn miro-btn--primary miro-btn--medium"  onclick="install()">Install</button>
+        <button class="miro-btn miro-btn--secondary miro-btn--medium"  onclick="miro.board.ui.closeModal()">Skip</button>
+    </div>
+</div>
+<script type="text/javascript" th:inline="javascript">
+    // this is a code duplication and may cause, if scopes change, misalignment
+    let authorizer = new MiroAuthorizer(["boards:write", "boards:read"], appUrl);
+    function install() {
+        authorizer.authorize().then(()=> miro.board.ui.closeModal('success'));
+    }
+</script>
+</body>
+</html>
