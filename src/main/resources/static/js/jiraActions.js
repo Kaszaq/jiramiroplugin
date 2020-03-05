@@ -25,7 +25,7 @@ async function transitionCard(card, transitions) {
     let transition = transitions[0]; //TODO: currently there is a support for only one transition per object but this might change when this supports multiple cloudIds and projects
 
     if(!cardIsInStatus(card, transition.statusName)){
-        let key = determineCardKey(card, transition.projectKey);
+        let key = determineCardKey(card, transition.projectKey); //todo: it seems key can be null when card does not match given transition - this should be chcked before making the call to update the status
 // check here if should Transition, whether the status has actually changed.
         console.log("Transitioning " + key + " to " + transition.name);
         let jiraUrl = 'https://api.atlassian.com/ex/jira/' + transition.jiraCloudId

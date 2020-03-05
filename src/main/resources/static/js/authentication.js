@@ -40,6 +40,7 @@ function requestAuthentication() {
 }
 
 function updateStatus() { // TODO: maybe add more params to if statements so it was even less clear what is happening here.
+    if(authorizer.isAuthorized()){
     $.get("/getAccessToken")
         .done(function (data) {
             if (data != "" && !accessTokenIsValid) {
@@ -52,7 +53,7 @@ function updateStatus() { // TODO: maybe add more params to if statements so it 
                     accessToken = data;
                     configureRuntimeState(accessibleResources);
                     setTimeout(updateStatus, 10000);
-                }).catch(reason => {
+                }).catch(reason => {                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                             233
                     requestAuthentication();
                 })
             } else if (data == "") {
@@ -68,4 +69,7 @@ function updateStatus() { // TODO: maybe add more params to if statements so it 
         .fail(function() {
             setTimeout(updateStatus, 10000);
         })
+    } else {
+        setTimeout(updateStatus, 1000);
+    }
 }

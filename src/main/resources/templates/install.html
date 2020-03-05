@@ -54,7 +54,7 @@
     </div>
 </div>
 <script type="text/javascript" th:inline="javascript">
-    // this is a code duplication and may cause, if scopes change, misalignment
+    // todo: this is a code duplication and may cause, if scopes change, misalignment
     let authorizer = new MiroAuthorizer(["boards:write", "boards:read"], appUrl);
     function install() {
         authorizer.authorize().then(()=> miro.board.ui.closeModal('success'));
