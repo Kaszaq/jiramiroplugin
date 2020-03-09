@@ -26,16 +26,18 @@ class MiroAuthorizer {
         };
     }
 
-    async isAuthorized() {
+    async checkAuthorization(){
         if (!this.authz) {
             this.authz = contains(await miro.currentUser.getScopes(), this.requiredScope);
         }
+    }
 
+    isAuthorized() {
         return this.authz;
     }
     // these two methods should be named differently to not confuse
     async authorized() {
-        let isAuthz = await this.isAuthorized();
+        let isAuthz = await this.checkAuthorization();
         if (!isAuthz) {
                 this.promptForAuthentication();
         }
@@ -48,6 +50,6 @@ class MiroAuthorizer {
     }
 
     promptForAuthentication() {
-        miro.board.ui.openModal(this.appUrl+"/install", {width: 740, height: 600}).then(() => this.isAuthorized());
+        miro.board.ui.openModal(this.appUrl+"/install", {width: 740, height: 600}).then(() => this.checkAuthorization());
     }
 }
