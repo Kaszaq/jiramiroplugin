@@ -35,11 +35,12 @@ class MiroAuthorizer {
     }
     // these two methods should be named differently to not confuse
     async authorized() {
-        if (!(await this.isAuthorized())) {
+        let isAuthz = await this.isAuthorized();
+        if (!isAuthz) {
                 this.promptForAuthentication();
         }
 
-        return this.authz;
+        return isAuthz;
     }
 
     async authorize() {
