@@ -30,6 +30,7 @@ class MiroAuthorizer {
         if (!this.authz) {
             this.authz = contains(await miro.currentUser.getScopes(), this.requiredScope);
         }
+        return this.authz;
     }
 
     isAuthorized() {
