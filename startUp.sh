@@ -1,1 +1,1 @@
-java $PROXY -jar jira-plugin-miro-integration.jar
+java $PROXY -javaagent:/opt/newrelic/newrelic.jar -jar jira-plugin-miro-integration.jar
