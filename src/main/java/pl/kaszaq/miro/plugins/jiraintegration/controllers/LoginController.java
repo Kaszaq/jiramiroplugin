@@ -14,11 +14,8 @@ public class LoginController {
 
     @Autowired
     private ClientRegistrationRepository clientRegistrationRepository;
-    @Value("${miroClientId}")
-    private String miroClientId;
     @GetMapping("/oauth2/login")
-    public String getLoginPage(Model model) {
-        model.addAttribute("miroClientId", miroClientId);
+    public String getLoginPage() {
         return "oauth_login";
     }
 

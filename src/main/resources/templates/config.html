@@ -155,7 +155,7 @@
 <script type="text/javascript" src="https://miro.com/app/static/sdk.1.1.js"></script>
 <script type="text/javascript" th:inline="javascript">
 
-    const miroClientId = /*[[${miroClientId}]]*/"3074457346801799399";
+    const miroClientId = miro.getClientId();
 
 </script>
 <script type="text/javascript" src="../static/js/transitionBoxes.js" th:src="@{/js/transitionBoxes.js}"></script>

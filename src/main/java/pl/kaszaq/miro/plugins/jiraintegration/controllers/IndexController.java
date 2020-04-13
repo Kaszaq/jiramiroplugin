@@ -10,23 +10,17 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class IndexController {
 
-    @Value("${miroClientId}")
-    private String miroClientId;
-
     @GetMapping("/")
-    public String indexController(Model model) {
-        model.addAttribute("miroClientId", miroClientId);
+    public String indexController() {
         return "index"; //view
     }
     @GetMapping("/install")
     public String installController() {
-        //model.addAttribute("miroClientId", miroClientId);
-        return "install"; //view
+        return "install";
     }
 
     @GetMapping("/installComplete")
     public String installCompleteController() {
-        //model.addAttribute("miroClientId", miroClientId);
         return "authFinished"; //view
     }
 }

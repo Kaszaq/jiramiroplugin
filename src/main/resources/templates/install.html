@@ -22,9 +22,6 @@
             height: 100%;
         }
     </style>
-    <script type="text/javascript" th:inline="javascript">
-        const appUrl = /*[('"'+${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+'"')]*/ "";
-    </script>
     <script type="text/javascript" src="../static/js/miroAuthorizer.js" th:src="@{/js/miroAuthorizer.js}"></script>
     <div th:remove="tag" th:utext="${T(com.newrelic.api.agent.NewRelic).getBrowserTimingHeader()}"></div>
 
@@ -57,7 +54,7 @@
 </div>
 <script type="text/javascript" th:inline="javascript">
     // todo: this is a code duplication and may cause, if scopes change, misalignment
-    let authorizer = new MiroAuthorizer(["boards:write", "boards:read"], appUrl);
+    let authorizer = new MiroAuthorizer(["boards:write", "boards:read"]);
     function install() {
         authorizer.authorize().then(()=> miro.board.ui.closeModal('success'));
     }

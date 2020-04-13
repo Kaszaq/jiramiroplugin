@@ -11,7 +11,7 @@ async function getJiraCloudId() { //todo: this should become obsolete
         let transitionBoxes = await getTransitionBoxes();
         if (transitionBoxes[0]) {
             found = true;
-            cloudId = confWidget[0].metadata[miroClientId].transitions[0].jiraCloudId;
+            cloudId = confWidget[0].metadata[miro.getClientId()].transitions[0].jiraCloudId;
         } else {
             await sleep(1000);
         }

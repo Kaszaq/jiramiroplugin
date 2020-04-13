@@ -12,12 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class ConfigController {
 
-    @Value("${miroClientId}")
-    private String miroClientId;
 
     @GetMapping("/config")
-    public String indexController(Model model) {
-        model.addAttribute("miroClientId", miroClientId);
-        return "config"; //view
+    public String indexController() {
+        return "config";
     }
 }

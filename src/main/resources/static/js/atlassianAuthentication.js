@@ -30,7 +30,7 @@ function requestAuthentication() {
 // todo: miro notify that trying to reconnect with Jira, please wait
     tryHiddenAuthentication()
         .catch(() => {
-            return miro.board.ui.openBottomPanel(loginUrl, {width: 280})
+            return miro.board.ui.openBottomPanel(document.location.protocol +'//' + document.location.host+ '/oauth2/login', {width: 280})
         })
         .finally(() => {
             setTimeout(updateStatus, 0);
@@ -52,7 +52,6 @@ function updateStatus() { // TODO: maybe add more params to if statements so it 
                         configureRuntimeState(accessibleResources);
                         setTimeout(updateStatus, 10000);
                     }).catch(reason => {
-                        233
                         requestAuthentication();
                     })
                 } else if (data == "") {

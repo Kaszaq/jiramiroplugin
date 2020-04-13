@@ -16,13 +16,12 @@ function contains(a1, a2) {
 
 class MiroAuthorizer {
 
-    constructor(requiredScope, appUrl) {
+    constructor(requiredScope) {
         this.requiredScope = requiredScope;
         this.authz = false;
-        this.appUrl = appUrl;
         this.authorizeOptions = {
             response_type: 'token',
-            redirect_uri: appUrl+'/installComplete'
+            redirect_uri: document.location.protocol +'//' + document.location.host+'/installComplete'
         };
     }
 
@@ -51,6 +50,6 @@ class MiroAuthorizer {
     }
 
     promptForAuthentication() {
-        miro.board.ui.openModal(this.appUrl+"/install", {width: 740, height: 600}).then(() => this.checkAuthorization());
+        miro.board.ui.openModal(document.location.protocol +'//' + document.location.host+"/install", {width: 740, height: 600}).then(() => this.checkAuthorization());
     }
 }

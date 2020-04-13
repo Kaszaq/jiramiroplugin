@@ -8,19 +8,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
-    <script type="text/javascript" th:inline="javascript">
-
-        const miroClientId = /*[[${miroClientId}]]*/"3074457346801799399";
-        const loginUrl = /*[('"'+${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/oauth2/login}+'"')]*/ "oauth_login.html";
-        const configUrl = /*[('"'+${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+@{/config}+'"')]*/ "config.html";
-        const appUrl = /*[('"'+${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+'"')]*/ "";
-    </script>
     <script type="text/javascript" src="../static/js/jiraActions.js" th:src="@{/js/jiraActions.js}"></script>
     <script type="text/javascript" src="../static/js/transitionBoxes.js" th:src="@{/js/transitionBoxes.js}"></script>
     <script type="text/javascript" src="../static/js/configuration.js" th:src="@{/js/configuration.js}"></script>
     <script type="text/javascript" src="../static/js/jiraCardsMonitoring.js"
             th:src="@{/js/jiraCardsMonitoring.js}"></script>
-    <script type="text/javascript" src="../static/js/authentication.js" th:src="@{/js/authentication.js}"></script>
+    <script type="text/javascript" src="../static/js/atlassianAuthentication.js" th:src="@{/js/atlassianAuthentication.js}"></script>
     <script type="text/javascript" src="../static/js/state.js" th:src="@{/js/state.js}"></script>
     <script type="text/javascript" src="../static/js/miroAuthorizer.js" th:src="@{/js/miroAuthorizer.js}"></script>
     <script type="text/javascript" src="../static/js/main.js" th:src="@{/js/main.js}"></script>

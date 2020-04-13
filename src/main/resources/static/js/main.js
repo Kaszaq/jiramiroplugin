@@ -10,10 +10,10 @@ function handleSelectTransitionBoxEvents(event) {
 
 }
 
-let authorizer = new MiroAuthorizer(["boards:write", "boards:read"], appUrl);
+let authorizer = new MiroAuthorizer(["boards:write", "boards:read"]);
 async function onClick() {
     if (await authorizer.authorized()) {
-        miro.board.ui.openLeftSidebar(configUrl);
+        miro.board.ui.openLeftSidebar(document.location.protocol +'//' + document.location.host+ '/config');
     }
 }
 

@@ -1,7 +1,7 @@
 let accessToken = ""
 
 function boxContainsTransition(box, transitionId) {
-    let transitions = box.metadata[miroClientId].transitions;
+    let transitions = box.metadata[miro.getClientId()].transitions;
     for (let i = 0; i < transitions.length; i++) {
         if (transitions[i].id === transitionId) {
             return true;

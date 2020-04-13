@@ -1,6 +1,6 @@
 function getPreviousTransitions(widget) {
     try {
-        return widget.metadata[miroClientId].transitions;
+        return widget.metadata[miro.getClientId()].transitions;
     } catch (e) { // is this an antipattern in javascript? other ways to check this look ridiculously complex
         return [];
     }
@@ -34,7 +34,7 @@ async function setWidgetAsTransitionBox(widget, jiraCloudId, projectKey, transit
         projectKey: projectKey,
         statusName: statusName
     });
-    updateObj.metadata[miroClientId] = {
+    updateObj.metadata[miro.getClientId()] = {
         transitions: previousTransitions
     };
     return miro.board.widgets.__blinkWidget(await miro.board.widgets.update(updateObj));
@@ -44,7 +44,7 @@ async function removeTransitionFromWidget(widget, transitionId, jiraCloudId) {
     let updateObj = {id: widget.id, metadata: {}};
     let previousTransitions = getPreviousTransitions(widget);
     removeTransitionsForId(previousTransitions, transitionId, jiraCloudId);
-    updateObj.metadata[miroClientId] = {
+    updateObj.metadata[miro.getClientId()] = {
         transitions: previousTransitions
     };
     return miro.board.widgets.__blinkWidget(await miro.board.widgets.update(updateObj));
@@ -61,5 +61,5 @@ async function setSelectedWidgetsAsTransitionBox(jiraCloudId, projectKey, transi
 }
 
 async function getTransitionBoxes() {
-    return miro.board.widgets.get('metadata.' + miroClientId + '.transitions')
+    return miro.board.widgets.get('metadata.' + miro.getClientId() + '.transitions')
 }
