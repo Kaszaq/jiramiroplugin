@@ -24,9 +24,12 @@
     <script type="text/javascript" src="../static/js/state.js" th:src="@{/js/state.js}"></script>
     <script type="text/javascript" src="../static/js/miroAuthorizer.js" th:src="@{/js/miroAuthorizer.js}"></script>
     <script type="text/javascript" src="../static/js/main.js" th:src="@{/js/main.js}"></script>
+    <div th:remove="tag" th:utext="${T(com.newrelic.api.agent.NewRelic).getBrowserTimingHeader()}"></div>
+
 </head>
 <body>
 
 <iframe id="authenticationFrame"></iframe>
+<div th:utext="${T(com.newrelic.api.agent.NewRelic).getBrowserTimingFooter()}"></div>
 </body>
 </html>

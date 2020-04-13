@@ -73,6 +73,7 @@
         }
 
     </style>
+    <div th:remove="tag" th:utext="${T(com.newrelic.api.agent.NewRelic).getBrowserTimingHeader()}"></div>
 
 </head>
 <body>
@@ -111,5 +112,7 @@
         }, 1000);
     }
 </script>
+<div th:utext="${T(com.newrelic.api.agent.NewRelic).getBrowserTimingFooter()}"></div>
+
 </body>
 </html>

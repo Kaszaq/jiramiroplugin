@@ -241,7 +241,7 @@ common: &default_settings
     # See https://docs.newrelic.com/docs/agents/java-agent/instrumentation/new-relic-browser-java-agent#manual_instrumentation
     # for instructions to add these manually to your pages.
     # Set this attribute to false to turn off this behavior.
-    auto_instrument: true
+    auto_instrument: false
 
   class_transformer:
     # This instrumentation reports the name of the user principal returned from 

@@ -26,6 +26,8 @@
         const appUrl = /*[('"'+${#httpServletRequest.scheme}+'://'+${#httpServletRequest.serverName}+':'+${#httpServletRequest.serverPort}+'"')]*/ "";
     </script>
     <script type="text/javascript" src="../static/js/miroAuthorizer.js" th:src="@{/js/miroAuthorizer.js}"></script>
+    <div th:remove="tag" th:utext="${T(com.newrelic.api.agent.NewRelic).getBrowserTimingHeader()}"></div>
+
 </head>
 <body>
 
@@ -60,5 +62,6 @@
         authorizer.authorize().then(()=> miro.board.ui.closeModal('success'));
     }
 </script>
+<div th:utext="${T(com.newrelic.api.agent.NewRelic).getBrowserTimingFooter()}"></div>
 </body>
 </html>
