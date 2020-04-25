@@ -1,4 +1,4 @@
-# Privacy Policy - Howfastyouaregoing Jira-Miro integration plugin
+# Privacy Policy - Effely.com Jira-Miro integration plugin
 This plugin allows making changes to your Jira project based on actions performed in Miro.
 
 **How does this plugin access your Atlassian account?**
