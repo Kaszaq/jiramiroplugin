@@ -113,16 +113,16 @@ class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRequestRe
     private OAuth2AuthorizationRequest customAuthorizationRequest(
             HttpServletRequest request, OAuth2AuthorizationRequest authorizationRequest) {
         boolean prompt = request.getParameterMap().containsKey("none") || request.getParameterMap().containsKey("consent");
-        if(!prompt){
+        if (!prompt) {
             return authorizationRequest;
         }
         Map<String, Object> additionalParameters =
                 new LinkedHashMap<>(authorizationRequest.getAdditionalParameters());
         String promptVal = "none";
-        if (request.getParameterMap().containsKey("consent")){
-            promptVal="consent";
+        if (request.getParameterMap().containsKey("consent")) {
+            promptVal = "consent";
         }
-        additionalParameters.put("prompt",promptVal);
+        additionalParameters.put("prompt", promptVal);
 
         return OAuth2AuthorizationRequest.from(authorizationRequest)
                 .additionalParameters(additionalParameters)
