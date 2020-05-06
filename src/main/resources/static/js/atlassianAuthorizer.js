@@ -91,21 +91,20 @@ class AtlassianAuthorizer {
         return miro.board.ui.openModal(document.location.protocol + '//' + document.location.host + '/oauth2/login?prompt='+prompt, {width: 740, height: 600})
     }
 
-     authenticationSuccess;
-     authenticationFailure;
 
      tryHiddenAuthentication() { // todo: add monitoring how often this actually successes or fails
         $("#authenticationFrame")[0].src = "/oauth2/authorization/atlassian?none"
+        let _parent = this;
         return new Promise(function (resolve, reject) {
-            this.authenticationSuccess = function () {
+            _parent.authenticationSuccess = function () {
                 resolve();
             }
-            this.authenticationFailure = function () {
+            _parent.authenticationFailure = function () {
                 reject();
             }
             setTimeout(function () {
-                this.authenticationSuccess = null;
-                this.authenticationFailure = null;
+                _parent.authenticationSuccess = null;
+                _parent.authenticationFailure = null;
                 reject();
             }, 5000);
         });
