@@ -1,7 +1,7 @@
 class AccessToken {
     constructor(token, ttl) {
         this.token = token;
-        this.endDate = new Date().getTime()/1000-30+ttl;
+        this.endDate = new Date().getTime() / 1000 - 30 + ttl;
 
     }
     getTimeLeftInMiliseconds = function () {
@@ -15,37 +15,20 @@ class AtlassianAuthorizer {
 
     constructor(requiredScope, appUrl) {
         this.boardUsingTransitionBoxes = false;
-        this.accessToken=null;
+        this.accessToken = null;
         setTimeout(this.verifyAuthentication, 0);
     }
 
-    async verifyIfUsingTransitionBoxes() {
-        miro.board.widgets.get('metadata.' + miro.getClientId())
-            .then((listOfWidgets) =>{
-                return listOfWidgets.length>0;
-            })
-    }
-
-    isNewAccessTokenRequired() {
-        return false;
-    }
-
-
-    getTimeout() {
-        if(!accessToken) return 0;
-        let timeLeftOnToken = accessToken.getTimeLeftInMiliseconds() / 2;
-        return timeLeftOnToken < 5000 ? 5000 : timeLeftOnToken ;
-    }
-
-    async verifyAuthentication(){
 
 
 
-        if(!this.boardUsingTransitionBoxes){
+    async verifyAuthentication() {
+
+        if (!this.boardUsingTransitionBoxes) {
             this.verifyIfUsingTransitionBoxes()
                 .then((boardUsingTransitionBoxes) => {
-                    this.boardUsingTransitionBoxes=boardUsingTransitionBoxes;
-                    if(boardUsingTransitionBoxes) {
+                    this.boardUsingTransitionBoxes = boardUsingTransitionBoxes;
+                    if (boardUsingTransitionBoxes) {
                         this.verifyAuthentication();
                     }
                     // else {
@@ -57,8 +40,8 @@ class AtlassianAuthorizer {
                 })
         } else { //sidenote: previusly there was a check whether "if(this.isNewAccessTokenRequired())" but I decided to skip it and refresh logic base purly on timeout loops.
             let accessToken = await this.getFreshAccessToken();
-            if (accessToken!=null) {
-                this.accessToken=accessToken;
+            if (accessToken != null) {
+                this.accessToken = accessToken;
                 setTimeout(this.verifyAuthentication, this.getTimeout());
             } else {
                 this.authenticate()
@@ -75,8 +58,25 @@ class AtlassianAuthorizer {
         }
     }
 
+    isNewAccessTokenRequired() {
+        return false;
+    }
+
+
+    getTimeout() {
+        if (!accessToken) return 0;
+        let timeLeftOnToken = accessToken.getTimeLeftInMiliseconds() / 2;
+        return timeLeftOnToken < 5000 ? 5000 : timeLeftOnToken;
+    }
+    async verifyIfUsingTransitionBoxes() {
+        miro.board.widgets.get('metadata.' + miro.getClientId())
+            .then((listOfWidgets) => {
+                return listOfWidgets.length > 0;
+            })
+    }
+
     async authenticate(prompt) {
-        if(!prompt) {
+        if (!prompt) {
             return this.tryHiddenAuthentication()
                 .catch(() => {
                     return this.startAuthenticationProcess()
@@ -88,11 +88,11 @@ class AtlassianAuthorizer {
 
     async startAuthenticationProcess(prompt) {
         prompt = prompt | false;
-        return miro.board.ui.openModal(document.location.protocol + '//' + document.location.host + '/oauth2/login?prompt='+prompt, {width: 740, height: 600})
+        return miro.board.ui.openModal(document.location.protocol + '//' + document.location.host + '/oauth2/login?prompt=' + prompt, { width: 740, height: 600 })
     }
 
 
-     tryHiddenAuthentication() { // todo: add monitoring how often this actually successes or fails
+    tryHiddenAuthentication() { // todo: add monitoring how often this actually successes or fails
         $("#authenticationFrame")[0].src = "/oauth2/authorization/atlassian?none"
         let _parent = this;
         return new Promise(function (resolve, reject) {
