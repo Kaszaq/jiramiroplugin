@@ -2,7 +2,6 @@ package pl.kaszaq.miro.plugins.jiraintegration;
 
 import com.nimbusds.jwt.JWT;
 import com.nimbusds.jwt.JWTParser;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -20,7 +19,6 @@ import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-@Slf4j
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -76,7 +74,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 }
 
-@Slf4j
 class CustomAuthorizationRequestResolver implements OAuth2AuthorizationRequestResolver {
     private final OAuth2AuthorizationRequestResolver defaultAuthorizationRequestResolver;
 
