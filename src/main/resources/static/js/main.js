@@ -1,3 +1,7 @@
+
+
+
+
 function handleSelectTransitionBoxEvents(event) {
     let e=event.data;
     if(e.type == 'select_transition_box') {
@@ -7,10 +11,11 @@ function handleSelectTransitionBoxEvents(event) {
             })
         });
     }
-
 }
 
 let authorizer = new MiroAuthorizer(["boards:write", "boards:read"]);
+
+
 async function onClick() {
     if (await authorizer.authorized()) {
         miro.board.ui.openLeftSidebar(document.location.protocol +'//' + document.location.host+ '/config');
@@ -20,8 +25,9 @@ async function onClick() {
 function enforceInstallationWhenOpeningBoard() {
     authorizer.authorized();
 }
-
+let jiraAuthorizer;
 miro.onReady(() => {
+    jiraAuthorizer = new AtlassianAuthorizer();
     enforceInstallationWhenOpeningBoard();
     miro.addListener('DATA_BROADCASTED', handleSelectTransitionBoxEvents);
 

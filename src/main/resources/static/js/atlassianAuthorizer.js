@@ -7,20 +7,16 @@ class AccessToken {
     getTimeLeftInMiliseconds = function () {
 
     }
-
 }
 
 
 class AtlassianAuthorizer {
 
-    constructor(requiredScope, appUrl) {
+    constructor() {
         this.boardUsingTransitionBoxes = false;
         this.accessToken = null;
-        setTimeout(this.verifyAuthentication, 0);
+        setTimeout(this.verifyAuthentication.bind(this), 0);
     }
-
-
-
 
     async verifyAuthentication() {
 
@@ -32,7 +28,7 @@ class AtlassianAuthorizer {
                         this.verifyAuthentication();
                     }
                     // else {
-                    // // note: i decided to comment this out. Such action should be then triggered when user would actually require authentication
+                    // // TODO: note: i decided to comment this out. Such action should be then triggered when user would actually require authentication
                     // // as an alternative plugin could be listening in such case for new widgets added to the board to verify whether they are
                     // // from this plugin
                     //     setTimeout(this.verifyAuthentication, 10_000);
@@ -42,7 +38,7 @@ class AtlassianAuthorizer {
             let accessToken = await this.getFreshAccessToken();
             if (accessToken != null) {
                 this.accessToken = accessToken;
-                setTimeout(this.verifyAuthentication, this.getTimeout());
+                setTimeout(this.verifyAuthentication.bind(this), this.getRefreshTime()*1000);
             } else {
                 this.authenticate()
                     // todo: this should here handle cancel of the user. In such case the application should not enforce user to reauthenticate.
@@ -52,24 +48,36 @@ class AtlassianAuthorizer {
                     // or should cause a card to get updated. Trigger when trying to move a
                     // card should not happen too often, good to consider monitoring whether
                     // this is something to really care about
-
-                    .finally(this.verifyAuthentication);
+                    .then((status) => {
+                        if (status==="success")
+                            this.verifyAuthentication();
+                    });
             }
         }
     }
-
-    isNewAccessTokenRequired() {
-        return false;
+    async getFreshAccessToken() {
+        return $.get("/getAccessToken")
+            .then((rawAccessToken) => {
+                if (rawAccessToken != "") {
+                    return $.get({
+                        url: "https://api.atlassian.com/oauth/token/accessible-resources",
+                        headers: { "Authorization": "Bearer " + rawAccessToken },
+                    }).then((accessibleResources) => {
+                        configureRuntimeState(accessibleResources, rawAccessToken);
+                        return new AccessToken(rawAccessToken, 600);// todo: ttl should be recevied from the backend. For now lets leave it at 10 minutes.
+                    })
+                }
+                return null;
+            })
     }
-
-
-    getTimeout() {
-        if (!accessToken) return 0;
-        let timeLeftOnToken = accessToken.getTimeLeftInMiliseconds() / 2;
+    getRefreshTime() {
+        if (!this.accessToken) return 0;
+        let timeLeftOnToken = this.accessToken.getTimeLeftInMiliseconds() / 2;
         return timeLeftOnToken < 5000 ? 5000 : timeLeftOnToken;
     }
+
     async verifyIfUsingTransitionBoxes() {
-        miro.board.widgets.get('metadata.' + miro.getClientId())
+        return miro.board.widgets.get('metadata.' + miro.getClientId())
             .then((listOfWidgets) => {
                 return listOfWidgets.length > 0;
             })
@@ -87,7 +95,7 @@ class AtlassianAuthorizer {
     }
 
     async startAuthenticationProcess(prompt) {
-        prompt = prompt | false;
+        prompt = prompt | "false";
         return miro.board.ui.openModal(document.location.protocol + '//' + document.location.host + '/oauth2/login?prompt=' + prompt, { width: 740, height: 600 })
     }
 

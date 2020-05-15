@@ -2,7 +2,9 @@
 
 This plugin allows to transition Jira issues in Jira when moving them on Miro Board.
 ![Graph](docs/cardtransition.gif)
+
 ### Current prerequisites
+
 * you need to have jira cards plugin installed as this plugin is created in a way to extend its capabilities
 
 ## Installation
@@ -28,11 +30,12 @@ card to a different column in Miro. With this plugin it is no longer required.
 There are some ideas for features, some known issues
 
 #### Features
-* remodel the way transition fields are created. This will be changed to drag&drop 
+
+* remodel the way transition fields are created. This will be changed to drag&drop
 which will create a sample objects. This turns out to be more natural for the users.
-* less user intrusive handling of authorization to Atlassian. Idea is to enforce atlassian authentication only when: 
+* less user intrusive handling of authorization to Atlassian. Idea is to enforce atlassian authentication only when:
   * moving cards
-  * trying to modify the board 
+  * trying to modify the board
 * support multiple jira clouds at once
 * creating a link between issues creates actual linkage in Jira. Depending on an arrow can indicate dependencies
 * adding support for cards rotation to trigger some change in jira - for instance to mark a ticket as blocked in jira for tracking/metrics purposes
@@ -45,4 +48,5 @@ which will create a sample objects. This turns out to be more natural for the us
     * ability to transition issue directly from preview view
 
 #### Issues
+
 * code needs to be rewritten. Current PoC is finished, now the code needs cleanup

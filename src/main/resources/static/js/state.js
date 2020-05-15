@@ -12,7 +12,7 @@ function addCloudEnvToState(cloudEnv) {
 }
 
 
-function configureRuntimeState(accessibleResources) {
+function configureRuntimeState(accessibleResources, accessToken) {
 
     for (let i = 0; i < accessibleResources.length; i++) {
         let jiraUrl = 'https://api.atlassian.com/ex/jira/' + accessibleResources[i].id;
