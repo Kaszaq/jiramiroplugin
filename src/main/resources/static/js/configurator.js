@@ -123,9 +123,8 @@ miro.onReady(() => {
     $.get("/getAccessToken", function (data) {
         accessToken = data
 
-        miro.__getRuntimeState().then(stateStored => {
+        getRuntimeState(accessToken).then(state => {
 
-                let state = stateStored.envs;
                 if (!jQuery.isEmptyObject(state)) {
                     let jiraCloudInstanceSelect = $('#jiraCloudInstance select');
                     jiraCloudInstanceSelect.empty();
@@ -153,6 +152,40 @@ miro.onReady(() => {
         )
     });
 })
+
+
+async function getRuntimeState(accessToken){
+    let state = [];
+    await $.get({
+        url: "https://api.atlassian.com/oauth/token/accessible-resources",
+        headers: { "Authorization": "Bearer " + accessToken },
+    }).then(async (accessibleResources) => {
+        for (let i = 0; i < accessibleResources.length; i++) {
+            let jiraUrl = 'https://api.atlassian.com/ex/jira/' + accessibleResources[i].id;
+            await $.get({
+                url: jiraUrl + '/rest/api/3/project',
+                headers: {"Authorization": "Bearer " + accessToken},
+            }).then((projectsRaw) => {
+                let projects = [];
+                for (let j = 0; j < projectsRaw.length; j++) {
+                    projects.push({
+                        id: projectsRaw[j].id,
+                        key: projectsRaw[j].key,
+                        name: projectsRaw[j].name
+                    })
+                }
+                let cloudEnv = {
+                    id: accessibleResources[i].id,
+                    name: accessibleResources[i].name,
+                    projects: projects,
+                }
+                state.push(cloudEnv);
+            })
+        }
+    })
+    return state;
+}
+
 /*
 let cloudEnv = {
             id: accessibleResources[i].id,

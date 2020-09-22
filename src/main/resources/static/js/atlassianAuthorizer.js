@@ -41,15 +41,8 @@ class AtlassianAuthorizer {
                 setTimeout(this.verifyAuthentication.bind(this), this.getRefreshTimeMillis());
             } else {
                 this.authenticate()
-                    // todo: this should here handle cancel of the user. In such case the application should not enforce user to reauthenticate.
-                    // another authentication would be triggered based on user interactions
-                    // on the board - either by trying to authenticate to via buttom when adding
-                    // new "sites" or when triggering an operation on the board that would
-                    // or should cause a card to get updated. Trigger when trying to move a
-                    // card should not happen too often, good to consider monitoring whether
-                    // this is something to really care about
                     .then((status) => {
-                        if (status==="success")
+                        if (status==="success") // in other cases it is considered as cancel was pressed
                             this.verifyAuthentication();
                     });
             }
@@ -59,13 +52,7 @@ class AtlassianAuthorizer {
         return $.get("/getAccessToken")
             .then((rawAccessToken) => {
                 if (rawAccessToken != "") {
-                    return $.get({
-                        url: "https://api.atlassian.com/oauth/token/accessible-resources",
-                        headers: { "Authorization": "Bearer " + rawAccessToken },
-                    }).then((accessibleResources) => {
-                        configureRuntimeState(accessibleResources, rawAccessToken);
-                        return new AccessToken(rawAccessToken, 600);// todo: ttl should be recevied from the backend. For now lets leave it at 10 minutes.
-                    })
+                    return new AccessToken(rawAccessToken, 600_000);// todo: ttl should be recevied from the backend. For now lets leave it at 10 minutes.
                 }
                 return null;
             })
