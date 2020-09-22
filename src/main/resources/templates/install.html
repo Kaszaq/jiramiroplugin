@@ -30,13 +30,12 @@
 
 <div class="container-fluid">
     <section style="margin-bottom: 30px;margin-top: 20px;">
-        <div class="miro-h1" style="margin-bottom: 10px">Install Jira-Miro plugin</div>
+        <div class="miro-h1" style="margin-bottom: 10px">Install Effely.com Jira-Miro plugin</div>
 
         <div class=" miro-p-medium" style="margin-bottom: 10px">
 
 
-            This board uses Jira transitions plugin. Please install it to make sure no data is lost when using this board.
-            Not installing this plugin may cause the board not to work as intended.
+            This team has installed Effely.com Jira-Miro transitions plugin. Skipping installation may prevent you from using this plugin on some boards.
         </div>
         <div class=" miro-p-medium"style="margin-bottom: 10px">
 
@@ -44,10 +43,10 @@
             If you Skip you can install this plugin later on by clicking on plugin button.
         </div>
         <div>
-            <img src="../static/img/whereisicon.png" th:src="@{img/whereisicon.png}" style="width: 50%"/>
+            <img src="../static/img/whereisicon.png" th:src="@{img/whereisicon.png}" style="width: 45%"/>
         </div>
     </section>
-    <div style="float: right">
+    <div style="float: right;margin-bottom: 12px;">
         <button class="miro-btn miro-btn--primary miro-btn--medium"  onclick="install()">Install</button>
         <button class="miro-btn miro-btn--secondary miro-btn--medium"  onclick="miro.board.ui.closeModal()">Skip</button>
     </div>

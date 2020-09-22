@@ -5,32 +5,30 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script type="text/javascript" src="https://miro.com/app/static/sdk.1.1.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    th:href="@{/webjars/bootstrap/css/bootstrap.min.css}"/>
+<link rel="stylesheet" type="text/css" href="https://miro.com/app/static/styles.1.0.css">
     <div th:remove="tag" th:utext="${T(com.newrelic.api.agent.NewRelic).getBrowserTimingHeader()}"></div>
 </head>
 <body>
 
 <div class="container-fluid">
     <section style="margin-bottom: 30px;margin-top: 20px;">
-        <div class="miro-h1" style="margin-bottom: 10px">Install Jira-Miro plugin</div>
+        <div class="miro-h1" style="margin-bottom: 10px">Login to Effely.com Jira-Miro plugin</div>
 
         <div class=" miro-p-medium" style="margin-bottom: 10px">
-            Please click "Login" to login to Effely.com Jira-Miro integration plugin using your atlassian account.
+            Please click "Login" to login to Effely.com Jira-Miro integration plugin using your atlassian account. Not doing so will not allow you to transition cards on this board.
         </div>
-        <div>
-            <img src="../static/img/whereisicon.png" th:src="@{img/whereisicon.png}" style="width: 50%"/>
-        </div>
+
     </section>
-    <div style="float: right">
+    <div style="float: right;margin-bottom: 12px;">
         <button class="miro-btn miro-btn--primary miro-btn--medium"  onclick="authenticateInPopup()">Login</button>
         <button class="miro-btn miro-btn--secondary miro-btn--medium"  onclick="miro.board.ui.closeModal('cancel')">Cancel</button>
     </div>
 </div>
 <script type="text/javascript" th:inline="javascript">
-    function login() {
-        authorizer.authorize().then(()=> miro.board.ui.closeModal('success'));
-    }
-
+ 
 
     function popupWindow(url, title, w, h) {
         let left = (screen.width / 2) - (w / 2);
@@ -51,24 +49,6 @@
     }
 
 </script>
-<div th:utext="${T(com.newrelic.api.agent.NewRelic).getBrowserTimingFooter()}"></div>
-
-
-
-<div class="blink btn authorize-button" onclick="authenticateInPopup()">
-
-    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <path fill="currentColor"
-              d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.31 7.526c-.099-.807.528-1.526 1.348-1.526.771 0 1.377.676 1.28 1.451l-.757 6.053c-.035.283-.276.496-.561.496s-.526-.213-.562-.496l-.748-5.978zm1.31 10.724c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/>
-    </svg>
-    <span>Please authorize Jira plugin.</span>
-    <svg class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-        <path fill="currentColor"
-              d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-1.31 7.526c-.099-.807.528-1.526 1.348-1.526.771 0 1.377.676 1.28 1.451l-.757 6.053c-.035.283-.276.496-.561.496s-.526-.213-.562-.496l-.748-5.978zm1.31 10.724c-.69 0-1.25-.56-1.25-1.25s.56-1.25 1.25-1.25 1.25.56 1.25 1.25-.56 1.25-1.25 1.25z"/>
-    </svg>
-
-</div>
-
 <div th:utext="${T(com.newrelic.api.agent.NewRelic).getBrowserTimingFooter()}"></div>
 
 </body>

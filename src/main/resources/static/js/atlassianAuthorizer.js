@@ -1,11 +1,11 @@
 class AccessToken {
     constructor(token, ttl) {
         this.token = token;
-        this.endDate = new Date().getTime() / 1000 - 30 + ttl;
+        this.endDateMilis = new Date().getTime() - 30_000 + ttl *  1_000 ; //substract 30 seconds to refresh before it becomes invalid
 
     }
     getTimeLeftInMiliseconds = function () {
-
+        return this.endDateMilis - new Date().getTime(); 
     }
 }
 
@@ -38,7 +38,7 @@ class AtlassianAuthorizer {
             let accessToken = await this.getFreshAccessToken();
             if (accessToken != null) {
                 this.accessToken = accessToken;
-                setTimeout(this.verifyAuthentication.bind(this), this.getRefreshTime()*1000);
+                setTimeout(this.verifyAuthentication.bind(this), this.getRefreshTimeMillis());
             } else {
                 this.authenticate()
                     // todo: this should here handle cancel of the user. In such case the application should not enforce user to reauthenticate.
@@ -70,10 +70,10 @@ class AtlassianAuthorizer {
                 return null;
             })
     }
-    getRefreshTime() {
+    getRefreshTimeMillis() {
         if (!this.accessToken) return 0;
         let timeLeftOnToken = this.accessToken.getTimeLeftInMiliseconds() / 2;
-        return timeLeftOnToken < 5000 ? 5000 : timeLeftOnToken;
+        return timeLeftOnToken < 5000 ? 5000 : timeLeftOnToken; // todo: what is this about?... why we divide
     }
 
     async verifyIfUsingTransitionBoxes() {
@@ -102,7 +102,7 @@ class AtlassianAuthorizer {
 
     tryHiddenAuthentication() { // todo: add monitoring how often this actually successes or fails
         $("#authenticationFrame")[0].src = "/oauth2/authorization/atlassian?none"
-        let _parent = this;
+        let _parent = window;
         return new Promise(function (resolve, reject) {
             _parent.authenticationSuccess = function () {
                 resolve();
