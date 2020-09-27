@@ -52,7 +52,7 @@ class AtlassianAuthorizer {
         return $.get("/getAccessToken")
             .then((rawAccessToken) => {
                 if (rawAccessToken != "") {
-                    return new AccessToken(rawAccessToken, 600_000);// todo: ttl should be recevied from the backend. For now lets leave it at 10 minutes.
+                    return new AccessToken(rawAccessToken, 600);// todo: ttl should be recevied from the backend. For now lets leave it at 10 minutes. these are seconds
                 }
                 return null;
             })
