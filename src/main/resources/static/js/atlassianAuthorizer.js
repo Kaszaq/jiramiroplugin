@@ -1,7 +1,7 @@
 class AccessToken {
     constructor(token, ttl) {
         this.token = token;
-        this.endDateMilis = new Date().getTime() - 30_000 + ttl *  1_000 ; //substract 30 seconds to refresh before it becomes invalid
+        this.endDateMilis = new Date().getTime() + ttl *  1_000 ; 
 
     }
     getTimeLeftInMiliseconds = function () {
@@ -34,7 +34,10 @@ class AtlassianAuthorizer {
                     //     setTimeout(this.verifyAuthentication, 10_000);
                     // }
                 })
-        } else { //sidenote: previusly there was a check whether "if(this.isNewAccessTokenRequired())" but I decided to skip it and refresh logic base purly on timeout loops.
+        } else { 
+            //sidenote: previusly there was a check whether "if(this.isNewAccessTokenRequired())" but I decided to skip it and refresh logic base purly on timeout loops.
+            //sidenote2 //todo: I was an idiot. This is necessary as otherwise if this method would be called from a different one and we were already authenticated then this
+            // would for to get a new access token for nothing...
             let accessToken = await this.getFreshAccessToken();
             if (accessToken != null) {
                 this.accessToken = accessToken;
@@ -54,13 +57,13 @@ class AtlassianAuthorizer {
                 if (rawAccessToken != "") {
                     return new AccessToken(rawAccessToken, 600);// todo: ttl should be recevied from the backend. For now lets leave it at 10 minutes. these are seconds
                 }
-                return null;
+                return this.accessToken;
             })
     }
     getRefreshTimeMillis() {
         if (!this.accessToken) return 0;
-        let timeLeftOnToken = this.accessToken.getTimeLeftInMiliseconds() / 2;
-        return timeLeftOnToken < 5000 ? 5000 : timeLeftOnToken; // todo: what is this about?... why we divide
+        let timeLeftOnToken = this.accessToken.getTimeLeftInMiliseconds() / 2; //we divide to try to refresh half way through token expiry
+        return timeLeftOnToken < 5000 ? 5000 : timeLeftOnToken; // if it happens that expiry has gotten below 5 seconds we are in trouble. Probably the backend doesnt work. To not refresh too often we try to refresh every 5 seconds.
     }
 
     async verifyIfUsingTransitionBoxes() {
