@@ -25,10 +25,11 @@ async function onClick() {
 function enforceInstallationWhenOpeningBoard() { //TODO: Would be good to rename it to prompt for installation or smth
     authorizer.authorized();
 }
+
 let jiraAuthorizer;
 miro.onReady(() => {
     jiraAuthorizer = new AtlassianAuthorizer();
-    enforceInstallationWhenOpeningBoard(); // todo:  probably after installation person wont be able to use cards. User would need to reload - this is due to how the authentication to plugin is enforced at the begining. 
+    enforceInstallationWhenOpeningBoard(); //todo:  probably after installation person wont be able to use cards. User would need to reload - this is due to how the authentication to plugin is enforced at the begining. 
     miro.addListener('DATA_BROADCASTED', handleSelectTransitionBoxEvents);
 
     miro.initialize({

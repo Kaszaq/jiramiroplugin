@@ -33,7 +33,7 @@ async function transitionCard(card, transitions) {
         let posting = $.post({
             url: jiraUrl + "/rest/api/3/issue/" + key + "/transitions",
             headers: {
-                "Authorization": "Bearer " + jiraAuthorizer.accessToken.token,
+                "Authorization": "Bearer " + jiraAuthorizer.accessToken.token, //todo: this should be done via method, accessToken should not be accesed directly
                 "Accept": "application/json"
             },
             data: data,
