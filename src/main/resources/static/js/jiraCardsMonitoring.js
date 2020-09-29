@@ -23,7 +23,3 @@ async function jiraTransformationUpdate(e) {
 		}
 	}
 }
-
-miro.onReady(() => {
-	miro.addListener('WIDGETS_TRANSFORMATION_UPDATED', jiraTransformationUpdate);
-})

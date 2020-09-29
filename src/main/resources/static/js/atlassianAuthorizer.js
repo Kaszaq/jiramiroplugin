@@ -1,11 +1,15 @@
 class AccessToken {
     constructor(token, ttl) {
         this.token = token;
-        this.endDateMilis = new Date().getTime() + ttl *  1_000 ; 
+        this.endDateMilis = new Date().getTime() + ttl * 1_000;
 
     }
     getTimeLeftInMiliseconds = function () {
-        return this.endDateMilis - new Date().getTime(); 
+        return this.endDateMilis - new Date().getTime();
+    }
+
+    isExpired = function () {
+        return this.endDateMilis - new Date().getTime() <= 0;
     }
 }
 
@@ -13,45 +17,45 @@ class AccessToken {
 class AtlassianAuthorizer {
 
     constructor() {
-        this.boardUsingTransitionBoxes = false;
-        this.accessToken = null;
-        setTimeout(this.verifyAuthentication.bind(this), 0);
+        this.tokenRefreshInitialized = false;
+        this.accessToken = new AccessToken("", 0); //expired/invalid token. Would be better if this was a static value from that object, dont know how to do it :D
     }
 
-    async verifyAuthentication() {
+    _isAuthorized() {
+        return !this.accessToken.isExpired();
+    }
 
-        if (!this.boardUsingTransitionBoxes) {
-            this.verifyIfUsingTransitionBoxes()
-                .then((boardUsingTransitionBoxes) => {
-                    this.boardUsingTransitionBoxes = boardUsingTransitionBoxes;
-                    if (boardUsingTransitionBoxes) {
-                        this.verifyAuthentication();
-                    }
-                    // else {
-                    // // TODO: note: i decided to comment this out. Such action should be then triggered when user would actually require authentication
-                    // // as an alternative plugin could be listening in such case for new widgets added to the board to verify whether they are
-                    // // from this plugin
-                    //     setTimeout(this.verifyAuthentication, 10_000);
-                    // }
-                })
-        } else { 
-            //sidenote: previusly there was a check whether "if(this.isNewAccessTokenRequired())" but I decided to skip it and refresh logic base purly on timeout loops.
-            //sidenote2 //todo: I was an idiot. This is necessary as otherwise if this method would be called from a different one and we were already authenticated then this
-            // would for to get a new access token for nothing...
-            let accessToken = await this.getFreshAccessToken();
-            if (accessToken != null) {
-                this.accessToken = accessToken;
-                setTimeout(this.verifyAuthentication.bind(this), this.getRefreshTimeMillis());
-            } else {
-                this.authenticate()
-                    .then((status) => {
-                        if (status==="success") // in other cases it is considered as cancel was pressed
-                            this.verifyAuthentication();
-                    });
-            }
+    authorized() {
+        let isAuthz = this._isAuthorized();
+        if (!isAuthz || !this.tokenRefreshInitialized) {
+            this._verifyAuthentication();
+            this.tokenRefreshInitialized = true;
+        }
+        return isAuthz;
+    }
+
+    getAccessToken() {
+        if (this.authorized()) {
+            return this.accessToken.token;
+        } else return null;
+    }
+
+    async _verifyAuthentication() {
+
+        let accessToken = await this._getFreshAccessToken();
+        if (!accessToken.isExpired()) {
+            this.accessToken = accessToken;
+            setTimeout(this._verifyAuthentication.bind(this), this._getRefreshTimeMillis());
+        } else {
+            this._authenticate()
+                .then((status) => {
+                    if (status === "success") // in other cases it is considered as cancel was pressed
+                        this._verifyAuthentication();
+                    else this.tokenRefreshInitialized = false;
+                });
         }
     }
-    async getFreshAccessToken() {
+    async _getFreshAccessToken() {
         return $.get("/getAccessToken")
             .then((rawAccessToken) => {
                 if (rawAccessToken != "") {
@@ -60,37 +64,32 @@ class AtlassianAuthorizer {
                 return this.accessToken;
             })
     }
-    getRefreshTimeMillis() {
+    _getRefreshTimeMillis() {
         if (!this.accessToken) return 0;
         let timeLeftOnToken = this.accessToken.getTimeLeftInMiliseconds() / 2; //we divide to try to refresh half way through token expiry
         return timeLeftOnToken < 5000 ? 5000 : timeLeftOnToken; // if it happens that expiry has gotten below 5 seconds we are in trouble. Probably the backend doesnt work. To not refresh too often we try to refresh every 5 seconds.
     }
 
-    async verifyIfUsingTransitionBoxes() {
-        return miro.board.widgets.get('metadata.' + miro.getClientId())
-            .then((listOfWidgets) => {
-                return listOfWidgets.length > 0;
-            })
-    }
 
-    async authenticate(prompt) {
+
+    async _authenticate(prompt) {
         if (!prompt) {
-            return this.tryHiddenAuthentication()
+            return this._tryHiddenAuthentication()
                 .catch(() => {
-                    return this.startAuthenticationProcess()
+                    return this._startAuthenticationProcess()
                 })
         } else {
-            return this.startAuthenticationProcess(prompt)
+            return this._startAuthenticationProcess(prompt)
         }
     }
 
-    async startAuthenticationProcess(prompt) {
+    async _startAuthenticationProcess(prompt) {
         prompt = prompt | "false";
         return miro.board.ui.openModal(document.location.protocol + '//' + document.location.host + '/oauth2/login?prompt=' + prompt, { width: 740, height: 600 })
     }
 
 
-    tryHiddenAuthentication() { // todo: add monitoring how often this actually successes or fails
+    _tryHiddenAuthentication() { // todo: add monitoring how often this actually successes or fails
         $("#authenticationFrame")[0].src = "/oauth2/authorization/atlassian?none"
         let _parent = window;
         return new Promise(function (resolve, reject) {

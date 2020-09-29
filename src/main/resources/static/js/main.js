@@ -3,8 +3,8 @@
 
 
 function handleSelectTransitionBoxEvents(event) {
-    let e=event.data;
-    if(e.type == 'select_transition_box') {
+    let e = event.data;
+    if (e.type == 'select_transition_box') {
         miro.board.selection.enterSelectWidgetsMode().then(widgets => {
             widgets.selectedWidgets.forEach(widget => {
                 setWidgetAsTransitionBox(widget, e.data.jiraCloudId, e.data.projectKey, e.data.transitionName, e.data.transitionId, e.data.statusName);
@@ -13,24 +13,43 @@ function handleSelectTransitionBoxEvents(event) {
     }
 }
 
-let authorizer = new MiroAuthorizer(["boards:write", "boards:read"]);
+let miroAuthorizer = new MiroAuthorizer(["boards:write", "boards:read"]);
 
-
+let jiraAuthorizer = new AtlassianAuthorizer();
+let pluginInitialized = false;
 async function onClick() {
-    if (await authorizer.authorized()) {
-        miro.board.ui.openLeftSidebar(document.location.protocol +'//' + document.location.host+ '/config');
+    if (pluginInitialized && jiraAuthorizer.authorized()) {
+        miro.board.ui.openLeftSidebar(document.location.protocol + '//' + document.location.host + '/config');
+    } else {
+        initializePlugin();
     }
 }
 
-function enforceInstallationWhenOpeningBoard() { //TODO: Would be good to rename it to prompt for installation or smth
-    authorizer.authorized();
+function initializePlugin() {
+    if (!pluginInitialized) {
+        miroAuthorizer.authorized().then((miroAuthorized) => {
+            if (miroAuthorized) {
+                verifyIfUsingTransitionBoxes().then((usingTransitionBoxes) => {
+                    if (usingTransitionBoxes)
+                        jiraAuthorizer.authorized();
+                })
+                miro.addListener('DATA_BROADCASTED', handleSelectTransitionBoxEvents);
+                miro.addListener('WIDGETS_TRANSFORMATION_UPDATED', jiraTransformationUpdate);
+                pluginInitialized = true;
+            }
+        });
+    }
 }
 
-let jiraAuthorizer;
+async function verifyIfUsingTransitionBoxes() {
+    return miro.board.widgets.get('metadata.' + miro.getClientId())
+        .then((listOfWidgets) => {
+            return listOfWidgets.length > 0;
+        })
+}
+
 miro.onReady(() => {
-    jiraAuthorizer = new AtlassianAuthorizer();
-    enforceInstallationWhenOpeningBoard(); //todo:  probably after installation person wont be able to use cards. User would need to reload - this is due to how the authentication to plugin is enforced at the begining. 
-    miro.addListener('DATA_BROADCASTED', handleSelectTransitionBoxEvents);
+    initializePlugin();
 
     miro.initialize({
         extensionPoints: {
