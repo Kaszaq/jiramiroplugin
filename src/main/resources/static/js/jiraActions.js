@@ -1,5 +1,14 @@
 // this function will no longer be required once miro exposes jira cards ids
 
+function determineTransitions(card, transitions) {
+    for(let i = 0; i < transitions.length; i++) {
+        let projectKey = transitions[i].projectKey;
+        if (determineCardKey(card, projectKey)) {
+            return transitions[i]; //TODO: current this will return first transition matching card
+        }
+    }
+}
+
 function determineCardKey(card, projectKey) {
     let cardCustomFieldValues = card.card.customFields.map((el) => el.value);
     for (let i = 0; i < cardCustomFieldValues.length; i++) {
@@ -8,6 +17,7 @@ function determineCardKey(card, projectKey) {
             return val;
         }
     }
+    return null;
 }
 
 function cardIsInStatus(card, statusName) {
@@ -22,11 +32,12 @@ function cardIsInStatus(card, statusName) {
 }
 
 async function transitionCard(card, transitions) {
-    let transition = transitions[0]; //TODO: currently there is a support for only one transition per object but this might change when this supports multiple cloudIds and projects
+    let transition = determineTransitions(card, transitions);
+    let key = determineCardKey(card, transition.projectKey); //todo: it seems key can be null when card does not match given transition - this should be chcked before making the call to update the status
 
+    
     if(!cardIsInStatus(card, transition.statusName)){
-        let key = determineCardKey(card, transition.projectKey); //todo: it seems key can be null when card does not match given transition - this should be chcked before making the call to update the status
-// check here if should Transition, whether the status has actually changed.
+        // check here if should Transition, whether the status has actually changed.
         console.log("Transitioning " + key + " to " + transition.name);
         let jiraUrl = 'https://api.atlassian.com/ex/jira/' + transition.jiraCloudId
         let data = JSON.stringify({transition: {id: transition.id}});
