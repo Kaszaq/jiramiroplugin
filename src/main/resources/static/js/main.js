@@ -21,13 +21,13 @@ async function onClick() {
     if (pluginInitialized && jiraAuthorizer.authorized()) {
         miro.board.ui.openLeftSidebar(document.location.protocol + '//' + document.location.host + '/config');
     } else {
-        initializePlugin();
+        initializePlugin(true);
     }
 }
 
-function initializePlugin() {
+function initializePlugin(installPrompt) {
     if (!pluginInitialized) {
-        miroAuthorizer.authorized().then((miroAuthorized) => {
+        miroAuthorizer.authorized(installPrompt).then((miroAuthorized) => {
             if (miroAuthorized) {
                 verifyIfUsingTransitionBoxes().then((usingTransitionBoxes) => {
                     if (usingTransitionBoxes)
@@ -49,7 +49,7 @@ async function verifyIfUsingTransitionBoxes() {
 }
 
 miro.onReady(() => {
-    initializePlugin();
+    initializePlugin(false);
 
     miro.initialize({
         extensionPoints: {

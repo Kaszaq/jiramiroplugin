@@ -19,10 +19,6 @@ class MiroAuthorizer {
     constructor(requiredScope) {
         this.requiredScope = requiredScope;
         this.authz = false;
-        this.authorizeOptions = {
-            response_type: 'token',
-            redirect_uri: document.location.protocol + '//' + document.location.host + '/installComplete'
-        };
     }
 
     async isAuthorized() {
@@ -33,19 +29,15 @@ class MiroAuthorizer {
     }
 
     // these two methods should be named differently to not confuse
-    async authorized() {
+    async authorized(authorize) {
         let isAuthz = await this.isAuthorized();
-        if (!isAuthz) {
+        if (!isAuthz && authorize) {
             return this.promptForAuthentication();
         }
         return isAuthz;
     }
 
-    async authorize() {
-        return miro.authorize(this.authorizeOptions);
-    }
-
     async promptForAuthentication() {
-        return miro.board.ui.openModal(document.location.protocol + '//' + document.location.host + "/install", { width: 740, height: 600 }).then(() => this.isAuthorized());
+        return miro.requestAuthorization().then(() => true).catch(() => false);
     }
 }
